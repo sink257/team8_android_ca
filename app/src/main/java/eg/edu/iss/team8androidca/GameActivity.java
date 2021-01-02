@@ -105,7 +105,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             if(matchCount==numberOfElements/2){
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(GameActivity.this);
                 alertDialogBuilder
-                        .setMessage("GAME OVER!\n" + "YOU WIN!\n" + "Your Score: \n" + "High Score: \n")
+                        .setMessage("GAME OVER!\n" + "YOU WIN!\n" + "Your Timing: \n" + "Fastest Timing: \n")
                         .setCancelable(false)
                         .setPositiveButton("Play Again", (dialog, which) -> {
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);

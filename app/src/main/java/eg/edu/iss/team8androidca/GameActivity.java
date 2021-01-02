@@ -1,11 +1,13 @@
 package eg.edu.iss.team8androidca;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.GridLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.Random;
@@ -101,7 +103,18 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             matchCount++;
 
             if(matchCount==numberOfElements/2){
-                finish();
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(GameActivity.this);
+                alertDialogBuilder
+                        .setMessage("GAME OVER!\n" + "YOU WIN!\n" + "Your Score: \n" + "High Score: \n")
+                        .setCancelable(false)
+                        .setPositiveButton("Play Again", (dialog, which) -> {
+                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            startActivity(intent);
+                            finish();
+                        });
+
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
             }
 
 
@@ -139,5 +152,10 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             buttonGraphicLocations[i] = buttonGraphicLocations[swapIndex];
             buttonGraphicLocations[swapIndex] = temp;
         }
+    }
+
+    public void finish(){
+        super.finish();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 }

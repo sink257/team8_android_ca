@@ -25,6 +25,7 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -36,7 +37,8 @@ public class FetchImg extends AppCompatActivity {
     Bitmap bitmap;
     String title;
     ProgressDialog progressDialog;
-    Button fetch;
+    Button mfetch;
+    EditText mEdit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,11 +48,13 @@ public class FetchImg extends AppCompatActivity {
         textView = (TextView) findViewById(R.id.title);
 
 
-        fetch = (Button) findViewById(R.id.fetch);
-        fetch.setOnClickListener(new View.OnClickListener() {
+        mfetch = (Button) findViewById(R.id.fetch);
+        mfetch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                url = "https://stocksnap.io/search/dessert";
+                mEdit = (EditText)findViewById(R.id.newURL);
+//                url = "https://stocksnap.io/search/dessert";
+                url = mEdit.getText().toString();
                 new Content().execute();
             }
         });

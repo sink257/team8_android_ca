@@ -20,7 +20,7 @@
             android:layout_marginRight="10dp"
             android:layout_marginTop="15dp"
             android:layout_marginBottom="10dp"
-            android:gravity="center"
+
             android:hint="Please enter the URL here"
             android:textSize="20sp"
             app:layout_constraintBottom_toTopOf="@id/fetch"

@@ -2,14 +2,13 @@ package eg.edu.iss.team8androidca;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button mGameBtn;
+    Button gameBtn;
     Button fetchBtn;
 
     @Override
@@ -17,21 +16,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mGameBtn = (Button) findViewById(R.id.btnGame);
-        mGameBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startGameActivity();
-            }
-        });
+        gameBtn = (Button) findViewById(R.id.btnGame);
+        gameBtn.setOnClickListener(v -> startGameActivity());
 
         fetchBtn = (Button) findViewById(R.id.btnFetch);
-        fetchBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fetchImgActivity();
-            }
-        });
+        fetchBtn.setOnClickListener(v -> fetchImgActivity());
 
     }
 

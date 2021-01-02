@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public class MainActivity extends AppCompatActivity {
 
     Button mGameBtn;
+    Button fetchBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,7 +18,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mGameBtn = (Button) findViewById(R.id.btnGame);
-
         mGameBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -25,10 +25,24 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        fetchBtn = (Button) findViewById(R.id.btnFetch);
+        fetchBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fetchImgActivity();
+            }
+        });
+
     }
 
     private void startGameActivity() {
         Intent intent = new Intent(this, GameActivity.class);
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+    }
+
+    private void fetchImgActivity() {
+        Intent intent = new Intent(this, FetchImg.class);
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }

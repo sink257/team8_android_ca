@@ -24,26 +24,36 @@ import android.app.Activity;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 public class FetchImg extends AppCompatActivity {
 
-    String url = "https://stocksnap.io/search/dessert";
+    String url;
     ImageView imageView;
     TextView textView;
     Bitmap bitmap;
     String title;
     ProgressDialog progressDialog;
+    Button fetch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fetch_img);
-
         imageView = (ImageView) findViewById(R.id.test);
         textView = (TextView) findViewById(R.id.title);
-        new Content().execute();
+
+
+        fetch = (Button) findViewById(R.id.fetch);
+        fetch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                url = "https://stocksnap.io/search/dessert";
+                new Content().execute();
+            }
+        });
     }
 
     private class Content extends AsyncTask<Void, Void, Void> {

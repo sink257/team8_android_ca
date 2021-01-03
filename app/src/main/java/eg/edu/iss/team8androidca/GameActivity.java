@@ -3,7 +3,9 @@ package eg.edu.iss.team8androidca;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.view.View;
+import android.widget.Chronometer;
 import android.widget.GridLayout;
 import android.widget.TextView;
 
@@ -19,6 +21,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private int[] buttonGraphicLocations;
     private int[] buttonGraphicsId;
     private int matchCount = 0;
+    Chronometer chrono;
+    private long timeWhenStopped = 0;
 
     private MemoryButton selectedButton1;
     private MemoryButton selectedButton2;
@@ -30,7 +34,24 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
-        GridLayout gridLayout = (GridLayout) findViewById(R.id.grid_layout_activity2);
+        GridLayout gridLayout = findViewById(R.id.grid_layout_activity2);
+
+        chrono = findViewById(R.id.chronometer);
+        chrono.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener(){
+            @Override
+            public void onChronometerTick(Chronometer chronometer) {
+                long time = SystemClock.elapsedRealtime() - chronometer.getBase();
+                int h   = (int)(time /3600000);
+                int m = (int)(time - h*3600000)/60000;
+                int s= (int)(time - h*3600000- m*60000)/1000 ;
+                String t = (h < 10 ? "0"+h: h)+":"+(m < 10 ? "0"+m: m)+":"+ (s < 10 ? "0"+s: s);
+                chronometer.setText(t);
+            }
+        });
+
+        chrono.setBase(SystemClock.elapsedRealtime());
+        chrono.setText("00:00:00");
+        chrono.start();
 
         int numColumns = gridLayout.getColumnCount();
         int numRows = gridLayout.getRowCount();
@@ -67,7 +88,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
 
         TextView textview = findViewById(R.id.score);
-        String score = String.valueOf(matchCount)+" / "+String.valueOf(numberOfElements/2);
+        String score = matchCount +" / "+ numberOfElements / 2;
         textview.setText(score);
 
         if (isBusy)
@@ -103,9 +124,11 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             matchCount++;
 
             if(matchCount==numberOfElements/2){
+                timeWhenStopped = chrono.getBase() - SystemClock.elapsedRealtime();
+                chrono.stop();
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(GameActivity.this);
                 alertDialogBuilder
-                        .setMessage("GAME OVER!\n" + "YOU WIN!\n" + "Your Timing: \n" + "Fastest Timing: \n")
+                        .setMessage("GAME OVER!\n" + "YOU WIN!\n" + "Your Timing: " + timeWhenStopped + "\n" + "Fastest Timing: \n")
                         .setCancelable(false)
                         .setPositiveButton("Play Again", (dialog, which) -> {
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);

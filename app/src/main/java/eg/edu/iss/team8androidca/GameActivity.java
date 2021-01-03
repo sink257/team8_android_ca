@@ -1,10 +1,13 @@
 package eg.edu.iss.team8androidca;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.GridLayout;
+import android.widget.RelativeLayout;
+import android.widget.TableLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
@@ -32,10 +35,28 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
         GridLayout gridLayout = (GridLayout) findViewById(R.id.grid_layout_activity2);
 
-        int numColumns = gridLayout.getColumnCount();
-        int numRows = gridLayout.getRowCount();
+
+        int numColumns = 0;
+        int numRows = 0;
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
+        {
+            numColumns = 3;
+            numRows = 4;
+
+        }
+        else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
+        {
+            numColumns = 6;
+            numRows = 2;
+        }
 
         numberOfElements = numColumns * numRows;
+
+        gridLayout.setColumnCount(numColumns);
+        gridLayout.setRowCount(numRows);
+        TextView textview = findViewById(R.id.score);
+        String score = "Matched sets: "+String.valueOf(matchCount)+" / "+String.valueOf(numberOfElements/2);
+        textview.setText(score);
 
         buttons = new MemoryButton[numberOfElements];
 
@@ -65,10 +86,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
-
-        TextView textview = findViewById(R.id.score);
-        String score = String.valueOf(matchCount)+" / "+String.valueOf(numberOfElements/2);
-        textview.setText(score);
 
         if (isBusy)
             return;
@@ -101,6 +118,10 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             selectedButton1 = null;
 
             matchCount++;
+
+            TextView textview = findViewById(R.id.score);
+            String score = "Matched sets: "+String.valueOf(matchCount)+" / "+String.valueOf(numberOfElements/2);
+            textview.setText(score);
 
             if(matchCount==numberOfElements/2){
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(GameActivity.this);

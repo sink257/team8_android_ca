@@ -32,6 +32,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class FetchImg extends AppCompatActivity {
@@ -40,7 +41,7 @@ public class FetchImg extends AppCompatActivity {
     LinearLayout gallery;
     ImageView[] imageViews = new ImageView[20];
     //arrayList to store the urls
-    ArrayList<Bitmap> imgBits = new ArrayList<Bitmap>();
+    ArrayList<Bitmap> imgBits = new ArrayList<Bitmap> ();
     Bitmap bitmap;
     String title;
     ProgressDialog progressDialog;
@@ -53,6 +54,8 @@ public class FetchImg extends AppCompatActivity {
         setContentView(R.layout.activity_fetch_img);
 
         gallery = findViewById(R.id.gallery);
+
+        // need to shift this into the code
         loadDefaultImageViews();
 
         mfetch = (Button) findViewById(R.id.fetch);
@@ -73,7 +76,11 @@ public class FetchImg extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             progressDialog = new ProgressDialog(FetchImg.this);
+            progressDialog.setMessage("Imma move it move it...");
+            progressDialog.setMax(20);
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
             progressDialog.show();
+            progressDialog.setCancelable(true);
         }
 
         @Override
@@ -91,6 +98,7 @@ public class FetchImg extends AppCompatActivity {
                         InputStream input = new java.net.URL(imgSrc).openStream();
                         Bitmap imgbit = BitmapFactory.decodeStream(input);
                         imgBits.add(imgbit);
+                        progressDialog.incrementProgressBy(1);
                     }
                 }
 

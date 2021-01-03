@@ -59,7 +59,7 @@ public class FetchImg extends AppCompatActivity {
 //        imageView2 = (ImageView) findViewById(R.id.test2);
 //        imageView3 = (ImageView) findViewById(R.id.test3);
 
-       // gallery = findViewById(R.id.gallery);
+        gallery = findViewById(R.id.gallery);
 
         // need to shift this into the code
         loadDefaultImageViews();

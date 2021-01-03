@@ -37,9 +37,6 @@ import android.widget.TextView;
 public class FetchImg extends AppCompatActivity {
 
     String url;
-    ImageView imageView1;
-    ImageView imageView2;
-    ImageView imageView3;
     LinearLayout gallery;
     ImageView[] imageViews = new ImageView[20];
     //arrayList to store the urls
@@ -54,9 +51,6 @@ public class FetchImg extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fetch_img);
-//        imageView1 = (ImageView) findViewById(R.id.test1);
-//        imageView2 = (ImageView) findViewById(R.id.test2);
-//        imageView3 = (ImageView) findViewById(R.id.test3);
 
         gallery = findViewById(R.id.gallery);
         loadDefaultImageViews();
@@ -66,7 +60,6 @@ public class FetchImg extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mEdit = (EditText)findViewById(R.id.newURL);
-                //url = "https://stocksnap.io/search/dessert";
                 url = mEdit.getText().toString();
                 imgBits.clear();
                 new Content().execute();
@@ -110,9 +103,6 @@ public class FetchImg extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-//            imageView1.setImageBitmap(imgBits.get(0));
-//            imageView2.setImageBitmap(imgBits.get(1));
-//            imageView3.setImageBitmap(imgBits.get(2));
 
             for(int i=0 ; i<20; i++)
             {

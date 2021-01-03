@@ -7,36 +7,23 @@
     tools:context=".FetchImg">
 
 
-    <LinearLayout
+
+    <EditText
+        android:id="@+id/newURL"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="10dp"
 
-        <EditText
-            android:id="@+id/newURL"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="10dp"
+        android:hint="Please enter the URL here"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@id/fetch"
+        app:layout_constraintTop_toTopOf="parent"
+        android:inputType= "text"/>
 
-            android:hint="Please enter the URL here"
-            android:textSize="20sp"
-            app:layout_constraintBottom_toTopOf="@id/fetch"
-            app:layout_constraintTop_toTopOf="parent"
-            android:inputType= "text"/>
-
-        <Button
-            android:id="@+id/fetch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="FETCH!"
-            android:textSize="20sp"
-            app:layout_constraintTop_toBottomOf="@id/newURL" />
-
-<!--        <GridView-->
+    <!--        <GridView-->
 <!--            android:id="@+id/simpleGridView"-->
 <!--            android:layout_width="fill_parent"-->
 <!--            android:layout_height="wrap_content"-->
@@ -46,23 +33,52 @@
 <!--            app:layout_constraintTop_toBottomOf="@id/fetch"-->
 <!--            android:layout_marginTop="15dp" />-->
 
-        <ImageView
-            android:id="@+id/test"
-            android:layout_width="90dp"
-            android:layout_height="100dp"
-            android:layout_gravity="center"
-            android:scaleType="centerCrop"
-            android:src="@drawable/peep" />
+    <Button
+        android:id="@+id/fetch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="FETCH!"
+        android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@id/newURL"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
 
+    <ImageView
+        android:id="@+id/test1"
+        android:layout_width="90dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="15dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/peep"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/fetch" />
 
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="30sp"
-            android:layout_margin="30dp"/>
+    <ImageView
+        android:id="@+id/test2"
+        android:layout_width="90dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="15dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/peep"
+        app:layout_constraintLeft_toRightOf="@id/test1"
+        app:layout_constraintTop_toBottomOf="@id/fetch" />
 
+    <ImageView
+        android:id="@+id/test3"
+        android:layout_width="90dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="15dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/peep"
+        app:layout_constraintLeft_toRightOf="@id/test2"
+        app:layout_constraintTop_toBottomOf="@id/fetch" />
 
-    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,18 +2,26 @@ package eg.edu.iss.team8androidca;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.view.View;
 import android.widget.GridLayout;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class GameActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -22,12 +30,17 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private int[] buttonGraphicLocations;
     private int[] buttonGraphicsId;
     private int matchCount = 0;
+    private TextView timerText;
+    private Timer timer;
+    private TimerTask timerTask;
+    private Double time = 0.0;
 
     private MemoryButton selectedButton1;
     private MemoryButton selectedButton2;
 
     public boolean isBusy = false;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,17 +48,13 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
         GridLayout gridLayout = (GridLayout) findViewById(R.id.grid_layout_activity2);
 
-
         int numColumns = 0;
         int numRows = 0;
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
-        {
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             numColumns = 3;
             numRows = 4;
 
-        }
-        else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
-        {
+        } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             numColumns = 6;
             numRows = 2;
         }
@@ -54,9 +63,16 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
         gridLayout.setColumnCount(numColumns);
         gridLayout.setRowCount(numRows);
+
+        timerText = (TextView) findViewById(R.id.timer);
+
         TextView textview = findViewById(R.id.score);
-        String score = "Matched sets: "+String.valueOf(matchCount)+" / "+String.valueOf(numberOfElements/2);
+        String score = "Matched sets: " + String.valueOf(matchCount) + " / " + String.valueOf(numberOfElements / 2);
         textview.setText(score);
+        timer = new Timer();
+        startTime();
+
+
 
         buttons = new MemoryButton[numberOfElements];
 
@@ -84,6 +100,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onClick(View view) {
 
@@ -118,15 +135,20 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             selectedButton1 = null;
 
             matchCount++;
+            final MediaPlayer correctSound = MediaPlayer.create(this, R.raw.correct);
+            correctSound.start();
 
             TextView textview = findViewById(R.id.score);
-            String score = "Matched sets: "+String.valueOf(matchCount)+" / "+String.valueOf(numberOfElements/2);
+            String score = "Matched sets: " + String.valueOf(matchCount) + " / " + String.valueOf(numberOfElements / 2);
             textview.setText(score);
 
-            if(matchCount==numberOfElements/2){
+            if (matchCount == numberOfElements / 2) {
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(GameActivity.this);
+                timerTask.cancel();
+
+                String time = getTimerText();
                 alertDialogBuilder
-                        .setMessage("GAME OVER!\n" + "YOU WIN!\n" + "Your Timing: \n" + "Fastest Timing: \n")
+                        .setMessage("GAME OVER!\n" + "YOU WIN!\n" + "Your Timing: " + time + " seconds" + "\n" + "Fastest Timing:\n")
                         .setCancelable(false)
                         .setPositiveButton("Play Again", (dialog, which) -> {
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
@@ -138,12 +160,13 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 alertDialog.show();
             }
 
-
             return;
 
         } else {
             selectedButton2 = button;
             selectedButton2.flip();
+            final MediaPlayer wrongSound = MediaPlayer.create(this, R.raw.wrong);
+            wrongSound.start();
             isBusy = true;
 
             final Handler handler = new Handler();
@@ -153,8 +176,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                     selectedButton2.flip();
                     selectedButton1.flip();
 
-                    selectedButton1=null;
-                    selectedButton2= null;
+                    selectedButton1 = null;
+                    selectedButton2 = null;
                     isBusy = false;
                 }
             }, 500);
@@ -175,8 +198,42 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    public void finish(){
+    public void finish() {
         super.finish();
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
+
+
+    private void startTime() {
+        timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        time++;
+                        String timerString = "Time taken: " + getTimerText();
+                        timerText.setText(timerString);
+                    }
+                });
+            }
+        };
+        timer.scheduleAtFixedRate(timerTask, 0, 1000);
+    }
+
+    private String getTimerText() {
+        int rounded = (int) Math.round(time);
+
+        int seconds = (rounded % 86400) % 3600 % 60;
+        int minutes = ((rounded % 86400) % 3600) / 60;
+        int hours = ((rounded % 86400) / 3600);
+
+        return formatTime(seconds, minutes, hours);
+    }
+
+    private String formatTime(int seconds, int minutes, int hours) {
+        return String.format("%02d", hours) + " : " + String.format("%02d", minutes) + " : " + String.format("%02d", seconds);
+    }
+
+
 }

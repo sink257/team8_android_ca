@@ -6,19 +6,14 @@ import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.SystemClock;
 import android.view.View;
 import android.widget.GridLayout;
-import android.widget.RelativeLayout;
-import android.widget.TableLayout;
 import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.time.Duration;
-import java.time.Instant;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -144,21 +139,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             textview.setText(score);
 
             if (matchCount == numberOfElements / 2) {
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(GameActivity.this);
-                timerTask.cancel();
-
-                String time = getTimerText();
-                alertDialogBuilder
-                        .setMessage("GAME OVER!\n" + "YOU WIN!\n" + "Your Timing: " + time + " seconds" + "\n" + "Fastest Timing:\n")
-                        .setCancelable(false)
-                        .setPositiveButton("Play Again", (dialog, which) -> {
-                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                            startActivity(intent);
-                            finish();
-                        });
-
-                AlertDialog alertDialog = alertDialogBuilder.create();
-                alertDialog.show();
+                initiateVictory();
             }
 
             return;
@@ -247,5 +228,24 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     protected void onResume(){
         super.onResume();
         isPause=false;
+    }
+
+    private void initiateVictory(){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(GameActivity.this);
+        timerTask.cancel();
+
+        String time = getTimerText();
+        alertDialogBuilder
+                .setTitle("Game Over!")
+                .setMessage("Try harder to beat the high score!\n" + "Your Timing: " + time + " seconds" + "\n" + "Fastest Timing:\n")
+                .setCancelable(false)
+                .setPositiveButton("Play Again", (dialog, which) -> {
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 }

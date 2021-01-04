@@ -6,63 +6,44 @@
     android:layout_height="match_parent"
     tools:context=".FetchImg">
 
+    <EditText
+        android:id="@+id/newURL"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="5dp"
+        android:hint="Please enter the URL here"
+        android:text="http://stocksnap.io/search/cute"
+        android:inputType="text"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toStartOf="@+id/fetch"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.75" />
+
+    <Button
+        android:id="@+id/fetch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:text="FETCH!"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/newURL"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
+        android:id="@+id/gallery"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <EditText
-            android:id="@+id/newURL"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="10dp"
-            android:gravity="center"
-            android:hint="Please enter the URL here"
-            android:textSize="20sp"
-            app:layout_constraintBottom_toTopOf="@id/fetch"
-            app:layout_constraintTop_toTopOf="parent"
-            android:inputType= "text"/>
-
-        <Button
-            android:id="@+id/fetch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="FETCH!"
-            android:textSize="20sp"
-            app:layout_constraintTop_toBottomOf="@id/newURL" />
-
-<!--        <GridView-->
-<!--            android:id="@+id/simpleGridView"-->
-<!--            android:layout_width="fill_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:horizontalSpacing="1dp"-->
-<!--            android:verticalSpacing="5dp"-->
-<!--            android:numColumns="4"-->
-<!--            app:layout_constraintTop_toBottomOf="@id/fetch"-->
-<!--            android:layout_marginTop="15dp" />-->
-
-        <ImageView
-            android:id="@+id/test"
-            android:layout_width="90dp"
-            android:layout_height="100dp"
-            android:layout_gravity="center"
-            android:scaleType="centerCrop"
-            android:src="@drawable/peep" />
-
-
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="30sp"
-            android:layout_margin="30dp"/>
-
-
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical"
+        app:layout_constraintHeight_percent="0.8"
+        app:layout_constraintTop_toBottomOf="@id/newURL">
     </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

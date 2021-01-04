@@ -48,7 +48,8 @@ public class FetchImg extends AppCompatActivity {
     ProgressDialog progressDialog;
     Button mfetch;
     EditText mEdit;
-    boolean clicked = false;
+    boolean clicked = true;
+    int clickCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,14 +122,21 @@ public class FetchImg extends AppCompatActivity {
                 imageViews[i].setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (!clicked){
-                            v.setAlpha((float) 0.5);
-                            clicked = true;
+                        if (clickCount<6){
+                            if (clicked){
+                                v.setAlpha(1);
+                                clicked = true;
+                                clickCount--;
+                                //remove from list?
+                            }
+                            else if (!clicked){
+                                v.setAlpha((float) 0.5);
+                                clicked = false;
+                                clickCount++;
+                                //add to list?
+                            }
                         }
-                        else{
-                            v.setAlpha(1);
-                            clicked = false;
-                        }
+
                     }
                 });
             }

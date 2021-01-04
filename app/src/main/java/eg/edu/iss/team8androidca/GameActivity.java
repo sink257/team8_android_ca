@@ -248,6 +248,4 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         super.onResume();
         isPause=false;
     }
-
-
 }

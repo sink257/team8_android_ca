@@ -49,7 +49,9 @@ public class FetchImg extends AppCompatActivity {
     ProgressDialog progressDialog;
     Button mfetch;
     EditText mEdit;
-    List<String> list;
+
+    boolean clicked = true;
+    int clickCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,41 +123,35 @@ public class FetchImg extends AppCompatActivity {
             imageViews[values[0]].setImageBitmap(imgBits.get(values[0]));
             progressDialog.incrementProgressBy(1);
         }
-        /*@Override
-        protected Void publishProgress(Void... voids) {
-            try {
-                Document document = Jsoup.connect(url).get();
-                //select all img elements
-                Elements imgs = document.select("img[src~=(?i)\\.(png|jpe?g)]");
-
-                ListIterator<Element> elementIt = imgs.listIterator();
-
-                for(int i = 0; i < 20; i++){
-                    if(elementIt.hasNext()){
-                        String imgSrc = elementIt.next().absUrl("src");
-                        InputStream input = new java.net.URL(imgSrc).openStream();
-                        Bitmap imgbit = BitmapFactory.decodeStream(input);
-                        imgBits.add(imgbit);
-                        // imageViews[i].setImageBitmap(imgBits.get(i));
-                        progressDialog.incrementProgressBy(1);
-                    }
-
-                }
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }*/
-
-
+  
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
 
             for(int i=0 ; i< 20 /*imgBits.size()*/ ; i++)
             {
-               //imageViews[i].setImageBitmap(imgBits.get(i));
+
+                //imageViews[i].setImageBitmap(imgBits.get(i));
+                imageViews[i].setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (clickCount<6){
+                            if (clicked){
+                                v.setAlpha(1);
+                                clicked = true;
+                                clickCount--;
+                                //remove from list?
+                            }
+                            else if (!clicked){
+                                v.setAlpha((float) 0.5);
+                                clicked = false;
+                                clickCount++;
+                                //add to list?
+                            }
+                        }
+
+                    }
+                });
             }
             progressDialog.dismiss();
         }
@@ -201,9 +197,5 @@ public class FetchImg extends AppCompatActivity {
         InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(v.getApplicationWindowToken(),0);
     }
-
-
-
-
 }
 

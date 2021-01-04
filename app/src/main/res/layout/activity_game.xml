@@ -26,7 +26,7 @@
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:gravity="center_vertical|right"
-            android:text="Time taken: 00:00:00"
+            android:text="Time: 00:00:00"
             android:textSize = "18sp"
             android:id="@+id/timer"/>
 

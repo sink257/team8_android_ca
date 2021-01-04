@@ -6,19 +6,14 @@ import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.SystemClock;
 import android.view.View;
 import android.widget.GridLayout;
-import android.widget.RelativeLayout;
-import android.widget.TableLayout;
 import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.time.Duration;
-import java.time.Instant;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -41,7 +36,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
     public boolean isBusy = false;
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,8 +67,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         timer = new Timer();
         startTime();
 
-
-
         buttons = new MemoryButton[numberOfElements];
 
         buttonGraphicsId = new int[numberOfElements / 2];
@@ -101,7 +93,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onClick(View view) {
 
@@ -149,7 +140,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
                 String time = getTimerText();
                 alertDialogBuilder
-                        .setMessage("GAME OVER!\n" + "YOU WIN!\n" + "Your Timing: " + time + " seconds" + "\n" + "Fastest Timing:\n")
+                        .setMessage("GAME OVER!\n" + "YOU WIN!\n" + "Your Timing: " + time + "\n" + "Fastest Timing:\n")
                         .setCancelable(false)
                         .setPositiveButton("Play Again", (dialog, which) -> {
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
@@ -176,7 +167,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 public void run() {
                     selectedButton2.flip();
                     selectedButton1.flip();
-
                     selectedButton1 = null;
                     selectedButton2 = null;
                     isBusy = false;
@@ -213,7 +203,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                     public void run() {
                         if (!isPause){
                             time++;
-                            String timerString = "Time taken: " + getTimerText();
+                            String timerString = "Time: " + getTimerText();
                             timerText.setText(timerString);
                         }
                     }
@@ -248,6 +238,4 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         super.onResume();
         isPause=false;
     }
-
-
 }

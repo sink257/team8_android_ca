@@ -90,14 +90,8 @@ public class FetchImg extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
 
-//            progressDialog = new ProgressDialog(FetchImg.this);
-//            progressDialog.setMessage("Imma move it move it...");
-//            progressDialog.setMax(20);
-//            progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-//            progressDialog.show();
-//            progressDialog.setCancelable(true);
-
             progressBar.setVisibility(ProgressBar.VISIBLE);
+            textView.setVisibility(textView.VISIBLE);
         }
 
         @Override

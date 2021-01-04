@@ -19,6 +19,7 @@ import java.util.TimerTask;
 
 public class GameActivity extends AppCompatActivity implements View.OnClickListener {
 
+    public boolean isBusy = false;
     private int numberOfElements;
     private MemoryButton[] buttons;
     private int[] buttonGraphicLocations;
@@ -31,11 +32,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private Double time = 0.0;
     private Double fastestTime = 20.0;
     private Boolean isPause = false;
-
     private MemoryButton selectedButton1;
     private MemoryButton selectedButton2;
-
-    public boolean isBusy = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -147,7 +145,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 } else if (fastestTime > time) {
                     fastestTime = time;
                     SharedPreferences pref = getSharedPreferences("fastest_time", MODE_PRIVATE);
-                    pref.edit().putString("fastestTime",(String.valueOf(fastestTime))).apply();
+                    pref.edit().putString("fastestTime", (String.valueOf(fastestTime))).apply();
                     gameWon();
                 }
             }
@@ -277,7 +275,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
     private void gameWon() {
         String _time = getTimerText();
-        String _fastestTime = getFastestTimeText();;
+        String _fastestTime = getFastestTimeText();
+        ;
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(GameActivity.this);
         alertDialogBuilder
@@ -298,6 +297,4 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }
-
-
 }

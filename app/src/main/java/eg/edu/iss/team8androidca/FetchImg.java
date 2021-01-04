@@ -63,14 +63,9 @@ public class FetchImg extends AppCompatActivity {
         mfetch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                revertToDefault();
                 mEdit = (EditText)findViewById(R.id.newURL);
                 url = mEdit.getText().toString();
-                imgBits.clear();
-                for(ImageView iv : imageViews)
-                {
-                    iv.setImageResource(R.drawable.peep);
-                }
-
                 hideKeybaord(v);
                 new Content().execute();
             }
@@ -129,7 +124,6 @@ public class FetchImg extends AppCompatActivity {
 
             for(int i=0 ; i< 20 /*imgBits.size()*/ ; i++)
             {
-
                 imageViews[i].setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -185,5 +179,16 @@ public class FetchImg extends AppCompatActivity {
         InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(v.getApplicationWindowToken(),0);
     }
+
+    private void revertToDefault()
+    {
+        imgBits.clear();
+        for(ImageView iv : imageViews)
+        {
+            iv.setImageResource(R.drawable.peep);
+        }
+    }
+
+
 }
 

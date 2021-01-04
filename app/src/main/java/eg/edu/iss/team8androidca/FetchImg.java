@@ -24,6 +24,7 @@ import org.jsoup.select.Elements;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +48,8 @@ public class FetchImg extends AppCompatActivity {
     ProgressDialog progressDialog;
     Button mfetch;
     EditText mEdit;
+    int progress = 0;
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,16 +74,22 @@ public class FetchImg extends AppCompatActivity {
     }
 
     private class Content extends AsyncTask<Void, Void, Void> {
+        Handler handler;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressDialog = new ProgressDialog(FetchImg.this);
-            progressDialog.setMessage("Imma move it move it...");
-            progressDialog.setMax(20);
-            progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-            progressDialog.show();
-            progressDialog.setCancelable(true);
+
+//            progressDialog = new ProgressDialog(FetchImg.this);
+//            progressDialog.setMessage("Imma move it move it...");
+//            progressDialog.setMax(20);
+//            progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+//            progressDialog.show();
+//            progressDialog.setCancelable(true);
+
+            progressBar = (ProgressBar) findViewById(R.id.progress_bar);
+            progressBar.setMax(20);
+            progressBar.setVisibility(ProgressBar.VISIBLE);
         }
 
         @Override
@@ -92,15 +101,22 @@ public class FetchImg extends AppCompatActivity {
 
                 ListIterator<Element> elementIt = imgs.listIterator();
 
+//                TextView textView = (TextView) findViewById(R.id.progress_text);
+
                 for(int i = 0; i < 20; i++){
                     if(elementIt.hasNext()){
                         String imgSrc = elementIt.next().absUrl("src");
                         InputStream input = new java.net.URL(imgSrc).openStream();
                         Bitmap imgbit = BitmapFactory.decodeStream(input);
                         imgBits.add(imgbit);
-                        progressDialog.incrementProgressBy(1);
+
+                        progressBar.incrementProgressBy(1);
+//                        textView.setText(i + "/" + progressBar.getMax());
                     }
+//                      progressDialog.incrementProgressBy(1);
                 }
+
+
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -116,7 +132,7 @@ public class FetchImg extends AppCompatActivity {
             {
                 imageViews[i].setImageBitmap(imgBits.get(i));
             }
-            progressDialog.dismiss();
+//            progressDialog.dismiss();
         }
     }
 
@@ -155,9 +171,6 @@ public class FetchImg extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-
-
-
 
 }
 

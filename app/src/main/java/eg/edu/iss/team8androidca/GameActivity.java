@@ -276,7 +276,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private void gameWon() {
         String _time = getTimerText();
         String _fastestTime = getFastestTimeText();
-        ;
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(GameActivity.this);
         alertDialogBuilder

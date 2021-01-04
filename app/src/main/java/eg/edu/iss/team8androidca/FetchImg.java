@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ListIterator;
 
 import org.jsoup.Jsoup;
@@ -48,6 +49,7 @@ public class FetchImg extends AppCompatActivity {
     ProgressDialog progressDialog;
     Button mfetch;
     EditText mEdit;
+    List<String> list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +74,7 @@ public class FetchImg extends AppCompatActivity {
         });
     }
 
-    private class Content extends AsyncTask<Void, Void, Void> {
+    private class Content extends AsyncTask<Void, Integer, Void> {
 
         @Override
         protected void onPreExecute() {
@@ -100,6 +102,8 @@ public class FetchImg extends AppCompatActivity {
                         InputStream input = new java.net.URL(imgSrc).openStream();
                         Bitmap imgbit = BitmapFactory.decodeStream(input);
                         imgBits.add(imgbit);
+                        publishProgress(i);
+                       // imageViews[i].setImageBitmap(imgBits.get(i));
                        // progressDialog.incrementProgressBy(1);
                     }
 
@@ -112,13 +116,46 @@ public class FetchImg extends AppCompatActivity {
         }
 
         @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+            imageViews[values[0]].setImageBitmap(imgBits.get(values[0]));
+            progressDialog.incrementProgressBy(1);
+        }
+        /*@Override
+        protected Void publishProgress(Void... voids) {
+            try {
+                Document document = Jsoup.connect(url).get();
+                //select all img elements
+                Elements imgs = document.select("img[src~=(?i)\\.(png|jpe?g)]");
+
+                ListIterator<Element> elementIt = imgs.listIterator();
+
+                for(int i = 0; i < 20; i++){
+                    if(elementIt.hasNext()){
+                        String imgSrc = elementIt.next().absUrl("src");
+                        InputStream input = new java.net.URL(imgSrc).openStream();
+                        Bitmap imgbit = BitmapFactory.decodeStream(input);
+                        imgBits.add(imgbit);
+                        // imageViews[i].setImageBitmap(imgBits.get(i));
+                        progressDialog.incrementProgressBy(1);
+                    }
+
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }*/
+
+
+        @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
 
-            for(int i=0 ; i< imgBits.size() ; i++)
+            for(int i=0 ; i< 20 /*imgBits.size()*/ ; i++)
             {
-                imageViews[i].setImageBitmap(imgBits.get(i));
-                //progressDialog.incrementProgressBy(1);
+               //imageViews[i].setImageBitmap(imgBits.get(i));
             }
             progressDialog.dismiss();
         }

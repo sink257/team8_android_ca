@@ -50,7 +50,6 @@ public class FetchImg extends AppCompatActivity {
     int progress = 0;
     ProgressBar progressBar;
 
-    boolean clicked = true;
     int clickCount;
 
     @Override
@@ -141,7 +140,6 @@ public class FetchImg extends AppCompatActivity {
 
             for(int i=0 ; i< 20 /*imgBits.size()*/ ; i++)
             {
-
                 imageViews[i].setOnClickListener(new View.OnClickListener() {
                     boolean clicked = true;
                     @Override
@@ -160,7 +158,6 @@ public class FetchImg extends AppCompatActivity {
                                 //add to list?
                             }
                         }
-
                     }
                 });
             }

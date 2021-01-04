@@ -48,6 +48,7 @@ public class FetchImg extends AppCompatActivity {
     ProgressDialog progressDialog;
     Button mfetch;
     EditText mEdit;
+    boolean clicked = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,7 +144,15 @@ public class FetchImg extends AppCompatActivity {
                 iv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-//                       v.setVisibility(View.GONE);
+
+                        if (!clicked){
+                            v.setAlpha((float) 0.5);
+                            clicked = true;
+                        }
+                        else{
+                            v.setAlpha(1);
+                            clicked = false;
+                        }
                     }
                 });
                 imageViews[count] = iv;
@@ -168,9 +177,5 @@ public class FetchImg extends AppCompatActivity {
         InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(v.getApplicationWindowToken(),0);
     }
-
-
-
-
 }
 

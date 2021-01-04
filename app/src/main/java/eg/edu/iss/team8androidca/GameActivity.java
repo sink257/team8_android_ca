@@ -237,7 +237,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         String time = getTimerText();
         alertDialogBuilder
                 .setTitle("Game Over!")
-                .setMessage("Try harder to beat the high score!\n" + "Your Timing: " + time + " seconds" + "\n" + "Fastest Timing:\n")
+                .setMessage("Try harder to beat the high score!\n" + "Your Timing: " + time  + "\n" + "Fastest Timing:\n")
                 .setCancelable(false)
                 .setPositiveButton("Play Again", (dialog, which) -> {
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);

@@ -42,10 +42,7 @@ public class FetchImg extends AppCompatActivity {
     String url;
     LinearLayout gallery;
     ImageView[] imageViews = new ImageView[20];
-    //arrayList to store the urls
     ArrayList<Bitmap> imgBits = new ArrayList<Bitmap> ();
-    Bitmap bitmap;
-    String title;
     ProgressDialog progressDialog;
     Button mfetch;
     EditText mEdit;
@@ -60,7 +57,6 @@ public class FetchImg extends AppCompatActivity {
 
         gallery = findViewById(R.id.gallery);
 
-        // need to shift this into the code
         loadDefaultImageViews();
 
         mfetch = (Button) findViewById(R.id.fetch);
@@ -70,6 +66,11 @@ public class FetchImg extends AppCompatActivity {
                 mEdit = (EditText)findViewById(R.id.newURL);
                 url = mEdit.getText().toString();
                 imgBits.clear();
+                for(ImageView iv : imageViews)
+                {
+                    iv.setImageResource(R.drawable.peep);
+                }
+
                 hideKeybaord(v);
                 new Content().execute();
             }
@@ -105,8 +106,6 @@ public class FetchImg extends AppCompatActivity {
                         Bitmap imgbit = BitmapFactory.decodeStream(input);
                         imgBits.add(imgbit);
                         publishProgress(i);
-                       // imageViews[i].setImageBitmap(imgBits.get(i));
-                       // progressDialog.incrementProgressBy(1);
                     }
 
                 }
@@ -131,7 +130,6 @@ public class FetchImg extends AppCompatActivity {
             for(int i=0 ; i< 20 /*imgBits.size()*/ ; i++)
             {
 
-                //imageViews[i].setImageBitmap(imgBits.get(i));
                 imageViews[i].setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -172,7 +170,6 @@ public class FetchImg extends AppCompatActivity {
                 ImageView iv = new ImageView(this);
                 iv.setImageResource(R.drawable.peep);
                 iv.setLayoutParams(ivParams);
-//                iv.setPadding(0,10,0,10);
                 iv.setId(count);
                 iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 imageViews[count] = iv;
@@ -183,15 +180,6 @@ public class FetchImg extends AppCompatActivity {
         }
     }
 
-    private void loadFetchedImageViews(String src, ImageView iv) {
-        try {
-            InputStream input = new java.net.URL(src).openStream();
-            Bitmap imgbit = BitmapFactory.decodeStream(input);
-            iv.setImageBitmap(imgbit);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     private void hideKeybaord(View v) {
         InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);

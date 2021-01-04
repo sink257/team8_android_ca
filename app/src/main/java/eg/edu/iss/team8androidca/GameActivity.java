@@ -34,6 +34,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private Timer timer;
     private TimerTask timerTask;
     private Double time = 0.0;
+    private Boolean isPause = false;
 
     private MemoryButton selectedButton1;
     private MemoryButton selectedButton2;
@@ -203,7 +204,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 
-
     private void startTime() {
         timerTask = new TimerTask() {
             @Override
@@ -211,9 +211,11 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        time++;
-                        String timerString = "Time taken: " + getTimerText();
-                        timerText.setText(timerString);
+                        if (!isPause){
+                            time++;
+                            String timerString = "Time taken: " + getTimerText();
+                            timerText.setText(timerString);
+                        }
                     }
                 });
             }
@@ -233,6 +235,18 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
     private String formatTime(int seconds, int minutes, int hours) {
         return String.format("%02d", hours) + " : " + String.format("%02d", minutes) + " : " + String.format("%02d", seconds);
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+        isPause = true;
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        isPause=false;
     }
 
 

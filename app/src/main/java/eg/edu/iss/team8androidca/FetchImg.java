@@ -1,11 +1,13 @@
 package eg.edu.iss.team8androidca;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 
 import java.io.File;
@@ -43,12 +45,13 @@ public class FetchImg extends AppCompatActivity {
     LinearLayout gallery;
     ImageView[] imageViews = new ImageView[20];
     ArrayList<Bitmap> imgBits = new ArrayList<Bitmap> ();
+    ArrayList<Bitmap> imgSelected= new ArrayList<Bitmap>();
     ProgressDialog progressDialog;
     Button mfetch;
     EditText mEdit;
 
-    boolean clicked = true;
-    int clickCount;
+
+    int clickCount=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,27 +125,30 @@ public class FetchImg extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
 
-            for(int i=0 ; i< 20 /*imgBits.size()*/ ; i++)
+            for(int i=0 ; i< imgBits.size() ; i++)
             {
+
                 imageViews[i].setOnClickListener(new View.OnClickListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.M)
                     @Override
                     public void onClick(View v) {
-                        if (clickCount<6){
-                            if (clicked){
-                                v.setAlpha(1);
-                                clicked = true;
-                                clickCount--;
-                                //remove from list?
-                            }
-                            else if (!clicked){
-                                v.setAlpha((float) 0.5);
-                                clicked = false;
-                                clickCount++;
-                                //add to list?
+                    Bitmap img = imgBits.get(v.getId());
+                        if (imgSelected.contains(img)){
+                            v.setForeground(null);
+                            v.setAlpha(1);
+                            clickCount--;
+                            imgSelected.remove(img);
+                        }
+                        else {
+                            if (clickCount<6){
+                            v.setForeground(getDrawable(R.drawable.selected));
+                            v.setAlpha((float) 0.5);
+                            clickCount++;
+                            imgSelected.add(img);
                             }
                         }
-
                     }
+
                 });
             }
             progressDialog.dismiss();
@@ -180,12 +186,14 @@ public class FetchImg extends AppCompatActivity {
         inputMethodManager.hideSoftInputFromWindow(v.getApplicationWindowToken(),0);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     private void revertToDefault()
     {
         imgBits.clear();
         for(ImageView iv : imageViews)
         {
             iv.setImageResource(R.drawable.peep);
+            iv.setForeground(null);
         }
     }
 

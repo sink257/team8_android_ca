@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ListIterator;
 
 import org.jsoup.Jsoup;
@@ -28,6 +29,7 @@ import android.os.Handler;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -41,15 +43,15 @@ public class FetchImg extends AppCompatActivity {
     String url;
     LinearLayout gallery;
     ImageView[] imageViews = new ImageView[20];
-    //arrayList to store the urls
     ArrayList<Bitmap> imgBits = new ArrayList<Bitmap> ();
-    Bitmap bitmap;
-    String title;
     ProgressDialog progressDialog;
     Button mfetch;
     EditText mEdit;
     int progress = 0;
     ProgressBar progressBar;
+
+    boolean clicked = true;
+    int clickCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +60,6 @@ public class FetchImg extends AppCompatActivity {
 
         gallery = findViewById(R.id.gallery);
 
-        // need to shift this into the code
         loadDefaultImageViews();
 
         mfetch = (Button) findViewById(R.id.fetch);
@@ -68,13 +69,20 @@ public class FetchImg extends AppCompatActivity {
                 mEdit = (EditText)findViewById(R.id.newURL);
                 url = mEdit.getText().toString();
                 imgBits.clear();
+                for(ImageView iv : imageViews)
+                {
+                    iv.setImageResource(R.drawable.peep);
+                }
+
+                hideKeybaord(v);
                 new Content().execute();
             }
         });
     }
 
+
     private class Content extends AsyncTask<Void, Void, Void> {
-        Handler handler;
+    private class Content extends AsyncTask<Void, Integer, Void> {
 
         @Override
         protected void onPreExecute() {
@@ -114,6 +122,9 @@ public class FetchImg extends AppCompatActivity {
 //                        textView.setText(i + "/" + progressBar.getMax());
                     }
 //                      progressDialog.incrementProgressBy(1);
+                        publishProgress(i);
+                    }
+
                 }
 
 
@@ -125,12 +136,39 @@ public class FetchImg extends AppCompatActivity {
         }
 
         @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+            imageViews[values[0]].setImageBitmap(imgBits.get(values[0]));
+            progressDialog.incrementProgressBy(1);
+        }
+  
+        @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
 
-            for(int i=0 ; i<20; i++)
+            for(int i=0 ; i< 20 /*imgBits.size()*/ ; i++)
             {
-                imageViews[i].setImageBitmap(imgBits.get(i));
+
+                imageViews[i].setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (clickCount<6){
+                            if (clicked){
+                                v.setAlpha(1);
+                                clicked = true;
+                                clickCount--;
+                                //remove from list?
+                            }
+                            else if (!clicked){
+                                v.setAlpha((float) 0.5);
+                                clicked = false;
+                                clickCount++;
+                                //add to list?
+                            }
+                        }
+
+                    }
+                });
             }
 //            progressDialog.dismiss();
         }
@@ -151,7 +189,6 @@ public class FetchImg extends AppCompatActivity {
                 ImageView iv = new ImageView(this);
                 iv.setImageResource(R.drawable.peep);
                 iv.setLayoutParams(ivParams);
-//                iv.setPadding(0,10,0,10);
                 iv.setId(count);
                 iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 imageViews[count] = iv;
@@ -172,5 +209,9 @@ public class FetchImg extends AppCompatActivity {
         }
     }
 
+    private void hideKeybaord(View v) {
+        InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(v.getApplicationWindowToken(),0);
+    }
 }
 

@@ -23,14 +23,15 @@ public class MemoryButton extends androidx.appcompat.widget.AppCompatButton {
         frontDrawableId = frontImageDrawableId;
 
         front = context.getDrawable(frontImageDrawableId);
-        back = context.getDrawable(R.drawable.ic_tcw);
+        back = context.getDrawable(R.drawable.idea);
 
         setBackground(back);
 
         GridLayout.LayoutParams tempParams = new GridLayout.LayoutParams(GridLayout.spec(r), GridLayout.spec(c));
 
-        tempParams.width = (int) getResources().getDisplayMetrics().density * 180;
-        tempParams.height = (int) getResources().getDisplayMetrics().density * 180;
+        tempParams.width = (int) getResources().getDisplayMetrics().density * 160;
+        tempParams.height = (int) getResources().getDisplayMetrics().density * 150;
+        tempParams.setMargins(15,15,15,15);
         setLayoutParams(tempParams);
     }
 

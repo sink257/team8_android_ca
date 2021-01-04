@@ -1,18 +1,22 @@
 package eg.edu.iss.team8androidca;
 
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.SystemClock;
 import android.view.View;
-import android.widget.Chronometer;
 import android.widget.GridLayout;
 import android.widget.TextView;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class GameActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -21,42 +25,50 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private int[] buttonGraphicLocations;
     private int[] buttonGraphicsId;
     private int matchCount = 0;
-    Chronometer chrono;
-    private long timeWhenStopped = 0;
+    private TextView timerText;
+    private Timer timer;
+    private TimerTask timerTask;
+    private Double time = 0.0;
+    private Boolean isPause = false;
 
     private MemoryButton selectedButton1;
     private MemoryButton selectedButton2;
 
     public boolean isBusy = false;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
-        GridLayout gridLayout = findViewById(R.id.grid_layout_activity2);
+        GridLayout gridLayout = (GridLayout) findViewById(R.id.grid_layout_activity2);
 
-        chrono = findViewById(R.id.chronometer);
-        chrono.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener(){
-            @Override
-            public void onChronometerTick(Chronometer chronometer) {
-                long time = SystemClock.elapsedRealtime() - chronometer.getBase();
-                int h   = (int)(time /3600000);
-                int m = (int)(time - h*3600000)/60000;
-                int s= (int)(time - h*3600000- m*60000)/1000 ;
-                String t = (h < 10 ? "0"+h: h)+":"+(m < 10 ? "0"+m: m)+":"+ (s < 10 ? "0"+s: s);
-                chronometer.setText(t);
-            }
-        });
+        int numColumns = 0;
+        int numRows = 0;
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            numColumns = 3;
+            numRows = 4;
 
-        chrono.setBase(SystemClock.elapsedRealtime());
-        chrono.setText("00:00:00");
-        chrono.start();
-
-        int numColumns = gridLayout.getColumnCount();
-        int numRows = gridLayout.getRowCount();
+        } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            numColumns = 6;
+            numRows = 2;
+        }
 
         numberOfElements = numColumns * numRows;
+
+        gridLayout.setColumnCount(numColumns);
+        gridLayout.setRowCount(numRows);
+
+        timerText = (TextView) findViewById(R.id.timer);
+
+        TextView textview = findViewById(R.id.score);
+        String score = "Matched sets: " + String.valueOf(matchCount) + " / " + String.valueOf(numberOfElements / 2);
+        textview.setText(score);
+        timer = new Timer();
+        startTime();
+
+
 
         buttons = new MemoryButton[numberOfElements];
 
@@ -84,12 +96,9 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onClick(View view) {
-
-        TextView textview = findViewById(R.id.score);
-        String score = matchCount +" / "+ numberOfElements / 2;
-        textview.setText(score);
 
         if (isBusy)
             return;
@@ -122,30 +131,24 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             selectedButton1 = null;
 
             matchCount++;
+            final MediaPlayer correctSound = MediaPlayer.create(this, R.raw.correct);
+            correctSound.start();
 
-            if(matchCount==numberOfElements/2){
-                timeWhenStopped = chrono.getBase() - SystemClock.elapsedRealtime();
-                chrono.stop();
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(GameActivity.this);
-                alertDialogBuilder
-                        .setMessage("GAME OVER!\n" + "YOU WIN!\n" + "Your Timing: " + timeWhenStopped + "\n" + "Fastest Timing: \n")
-                        .setCancelable(false)
-                        .setPositiveButton("Play Again", (dialog, which) -> {
-                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                            startActivity(intent);
-                            finish();
-                        });
+            TextView textview = findViewById(R.id.score);
+            String score = "Matched sets: " + String.valueOf(matchCount) + " / " + String.valueOf(numberOfElements / 2);
+            textview.setText(score);
 
-                AlertDialog alertDialog = alertDialogBuilder.create();
-                alertDialog.show();
+            if (matchCount == numberOfElements / 2) {
+                initiateVictory();
             }
-
 
             return;
 
         } else {
             selectedButton2 = button;
             selectedButton2.flip();
+            final MediaPlayer wrongSound = MediaPlayer.create(this, R.raw.wrong);
+            wrongSound.start();
             isBusy = true;
 
             final Handler handler = new Handler();
@@ -155,8 +158,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                     selectedButton2.flip();
                     selectedButton1.flip();
 
-                    selectedButton1=null;
-                    selectedButton2= null;
+                    selectedButton1 = null;
+                    selectedButton2 = null;
                     isBusy = false;
                 }
             }, 500);
@@ -177,8 +180,72 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    public void finish(){
+    public void finish() {
         super.finish();
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+    }
+
+    private void startTime() {
+        timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (!isPause){
+                            time++;
+                            String timerString = "Time taken: " + getTimerText();
+                            timerText.setText(timerString);
+                        }
+                    }
+                });
+            }
+        };
+        timer.scheduleAtFixedRate(timerTask, 0, 1000);
+    }
+
+    private String getTimerText() {
+        int rounded = (int) Math.round(time);
+
+        int seconds = (rounded % 86400) % 3600 % 60;
+        int minutes = ((rounded % 86400) % 3600) / 60;
+        int hours = ((rounded % 86400) / 3600);
+
+        return formatTime(seconds, minutes, hours);
+    }
+
+    private String formatTime(int seconds, int minutes, int hours) {
+        return String.format("%02d", hours) + " : " + String.format("%02d", minutes) + " : " + String.format("%02d", seconds);
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+        isPause = true;
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        isPause=false;
+    }
+
+    private void initiateVictory(){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(GameActivity.this);
+        timerTask.cancel();
+
+        String time = getTimerText();
+        alertDialogBuilder
+                .setTitle("Game Over!")
+                .setMessage("Try harder to beat the high score!\n" + "Your Timing: " + time + " seconds" + "\n" + "Fastest Timing:\n")
+                .setCancelable(false)
+                .setPositiveButton("Play Again", (dialog, which) -> {
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 }

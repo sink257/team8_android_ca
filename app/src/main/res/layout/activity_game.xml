@@ -10,30 +10,32 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_weight="1">
 
         <TextView
-            android:id="@+id/score"
-            android:layout_width="160dp"
-            android:layout_height="50dp" />
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical|left"
+            android:textSize = "18sp"
+            android:id="@+id/score"/>
 
-        <Chronometer
-            android:id="@+id/chronometer"
-            android:layout_width="160dp"
-            android:layout_height="50dp" />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical|right"
+            android:text="Time: 00:00:00"
+            android:textSize = "18sp"
+            android:id="@+id/timer"/>
 
     </LinearLayout>
     <GridLayout
         android:layout_height="0dp"
-        android:layout_width="match_parent"
-        android:layout_weight="8"
-        android:paddingBottom="2dp"
-        android:paddingTop="2dp"
-        android:paddingLeft="2dp"
-        android:paddingRight="2dp"
-        android:columnCount="3"
-        android:rowCount="4"
+        android:layout_width="wrap_content"
+        android:layout_weight="9"
+        android:layout_gravity="center"
         android:id="@+id/grid_layout_activity2"
         android:useDefaultMargins="true"/>
 

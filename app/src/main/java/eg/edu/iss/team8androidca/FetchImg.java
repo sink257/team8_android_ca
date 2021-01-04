@@ -100,8 +100,9 @@ public class FetchImg extends AppCompatActivity {
                         InputStream input = new java.net.URL(imgSrc).openStream();
                         Bitmap imgbit = BitmapFactory.decodeStream(input);
                         imgBits.add(imgbit);
-                        progressDialog.incrementProgressBy(1);
+                       // progressDialog.incrementProgressBy(1);
                     }
+
                 }
 
             } catch (IOException e) {
@@ -114,9 +115,10 @@ public class FetchImg extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
 
-            for(int i=0 ; i<20; i++)
+            for(int i=0 ; i< imgBits.size() ; i++)
             {
                 imageViews[i].setImageBitmap(imgBits.get(i));
+                //progressDialog.incrementProgressBy(1);
             }
             progressDialog.dismiss();
         }

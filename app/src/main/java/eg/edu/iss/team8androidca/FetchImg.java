@@ -1,11 +1,13 @@
 package eg.edu.iss.team8androidca;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 
 import java.io.File;
@@ -14,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ListIterator;
 
 import org.jsoup.Jsoup;
@@ -24,6 +27,7 @@ import org.jsoup.select.Elements;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,15 +45,16 @@ public class FetchImg extends AppCompatActivity {
     String url;
     LinearLayout gallery;
     ImageView[] imageViews = new ImageView[20];
-    //arrayList to store the urls
     ArrayList<Bitmap> imgBits = new ArrayList<Bitmap> ();
-    Bitmap bitmap;
-    String title;
+    ArrayList<Bitmap> imgSelected= new ArrayList<Bitmap>();
     ProgressDialog progressDialog;
     Button mfetch;
     EditText mEdit;
-    boolean clicked = true;
-    int clickCount;
+    int progress = 0;
+    ProgressBar progressBar;
+
+
+    int clickCount=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,16 +63,15 @@ public class FetchImg extends AppCompatActivity {
 
         gallery = findViewById(R.id.gallery);
 
-        // need to shift this into the code
         loadDefaultImageViews();
 
         mfetch = (Button) findViewById(R.id.fetch);
         mfetch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                revertToDefault();
                 mEdit = (EditText)findViewById(R.id.newURL);
                 url = mEdit.getText().toString();
-                imgBits.clear();
                 hideKeybaord(v);
                 new Content().execute();
             }
@@ -79,12 +83,17 @@ public class FetchImg extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressDialog = new ProgressDialog(FetchImg.this);
-            progressDialog.setMessage("Imma move it move it...");
-            progressDialog.setMax(20);
-            progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-            progressDialog.show();
-            progressDialog.setCancelable(true);
+
+//            progressDialog = new ProgressDialog(FetchImg.this);
+//            progressDialog.setMessage("Imma move it move it...");
+//            progressDialog.setMax(20);
+//            progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+//            progressDialog.show();
+//            progressDialog.setCancelable(true);
+
+            progressBar = (ProgressBar) findViewById(R.id.progress_bar);
+            progressBar.setMax(20);
+            progressBar.setVisibility(ProgressBar.VISIBLE);
         }
 
         @Override
@@ -96,16 +105,21 @@ public class FetchImg extends AppCompatActivity {
 
                 ListIterator<Element> elementIt = imgs.listIterator();
 
+//                TextView textView = (TextView) findViewById(R.id.progress_text);
+
                 for(int i = 0; i < 20; i++){
                     if(elementIt.hasNext()){
-                            String imgSrc = elementIt.next().absUrl("src");
-                            InputStream input = new java.net.URL(imgSrc).openStream();
-                            Bitmap imgbit = BitmapFactory.decodeStream(input);
-                            imgBits.add(imgbit);
-                            progressDialog.incrementProgressBy(1);
-                    }
-                }
+                        String imgSrc = elementIt.next().absUrl("src");
+                        InputStream input = new java.net.URL(imgSrc).openStream();
+                        Bitmap imgbit = BitmapFactory.decodeStream(input);
+                        imgBits.add(imgbit);
 
+                        progressBar.incrementProgressBy(1);
+//                        textView.setText(i + "/" + progressBar.getMax());
+                    }
+//                      progressDialog.incrementProgressBy(1);
+                        publishProgress(i);
+                    }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -113,34 +127,45 @@ public class FetchImg extends AppCompatActivity {
         }
 
         @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+            imageViews[values[0]].setImageBitmap(imgBits.get(values[0]));
+            progressDialog.incrementProgressBy(1);
+        }
+  
+        @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
 
-            for(int i=0 ; i<20; i++)
+            for(int i=0 ; i< imgBits.size() ; i++)
             {
-                imageViews[i].setImageBitmap(imgBits.get(i));
+
                 imageViews[i].setOnClickListener(new View.OnClickListener() {
+
+                    @RequiresApi(api = Build.VERSION_CODES.M)
                     @Override
                     public void onClick(View v) {
-                        if (clickCount<6){
-                            if (clicked){
-                                v.setAlpha(1);
-                                clicked = true;
-                                clickCount--;
-                                //remove from list?
-                            }
-                            else if (!clicked){
-                                v.setAlpha((float) 0.5);
-                                clicked = false;
-                                clickCount++;
-                                //add to list?
+                    Bitmap img = imgBits.get(v.getId());
+                        if (imgSelected.contains(img)){
+                            v.setForeground(null);
+                            v.setAlpha(1);
+                            clickCount--;
+                            imgSelected.remove(img);
+                        }
+                        else {
+                            if (clickCount<6){
+                            v.setForeground(getDrawable(R.drawable.selected));
+                            v.setAlpha((float) 0.5);
+                            clickCount++;
+                            imgSelected.add(img);
+
                             }
                         }
-
                     }
+
                 });
             }
-            progressDialog.dismiss();
+//            progressDialog.dismiss();
         }
     }
 
@@ -159,7 +184,6 @@ public class FetchImg extends AppCompatActivity {
                 ImageView iv = new ImageView(this);
                 iv.setImageResource(R.drawable.peep);
                 iv.setLayoutParams(ivParams);
-//                iv.setPadding(0,10,0,10);
                 iv.setId(count);
                 iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 imageViews[count] = iv;
@@ -184,5 +208,18 @@ public class FetchImg extends AppCompatActivity {
         InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(v.getApplicationWindowToken(),0);
     }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void revertToDefault()
+    {
+        imgBits.clear();
+        for(ImageView iv : imageViews)
+        {
+            iv.setImageResource(R.drawable.peep);
+            iv.setForeground(null);
+        }
+    }
+
+
 }
 

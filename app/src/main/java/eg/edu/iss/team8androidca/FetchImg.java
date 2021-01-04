@@ -118,6 +118,19 @@ public class FetchImg extends AppCompatActivity {
             for(int i=0 ; i<20; i++)
             {
                 imageViews[i].setImageBitmap(imgBits.get(i));
+                imageViews[i].setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (!clicked){
+                            v.setAlpha((float) 0.5);
+                            clicked = true;
+                        }
+                        else{
+                            v.setAlpha(1);
+                            clicked = false;
+                        }
+                    }
+                });
             }
             progressDialog.dismiss();
         }
@@ -141,20 +154,6 @@ public class FetchImg extends AppCompatActivity {
 //                iv.setPadding(0,10,0,10);
                 iv.setId(count);
                 iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                iv.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        if (!clicked){
-                            v.setAlpha((float) 0.5);
-                            clicked = true;
-                        }
-                        else{
-                            v.setAlpha(1);
-                            clicked = false;
-                        }
-                    }
-                });
                 imageViews[count] = iv;
                 layout.addView(iv);
                 count++;

@@ -43,7 +43,10 @@ public class FetchImg extends AppCompatActivity {
     String url;
     LinearLayout gallery;
     ImageView[] imageViews = new ImageView[20];
+    //arrayList to store the urls
     ArrayList<Bitmap> imgBits = new ArrayList<Bitmap> ();
+    Bitmap bitmap;
+    String title;
     ProgressDialog progressDialog;
     Button mfetch;
     EditText mEdit;
@@ -69,6 +72,7 @@ public class FetchImg extends AppCompatActivity {
                 mEdit = (EditText)findViewById(R.id.newURL);
                 url = mEdit.getText().toString();
                 imgBits.clear();
+                progressBar.setProgress(0);
                 for(ImageView iv : imageViews)
                 {
                     iv.setImageResource(R.drawable.peep);
@@ -79,7 +83,6 @@ public class FetchImg extends AppCompatActivity {
             }
         });
     }
-
 
     private class Content extends AsyncTask<Void, Void, Void> {
     private class Content extends AsyncTask<Void, Integer, Void> {
@@ -141,7 +144,7 @@ public class FetchImg extends AppCompatActivity {
             imageViews[values[0]].setImageBitmap(imgBits.get(values[0]));
             progressDialog.incrementProgressBy(1);
         }
-  
+
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);

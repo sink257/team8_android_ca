@@ -154,7 +154,7 @@ public class FetchImg extends AppCompatActivity {
 
                 });
             }
-//            progressDialog.dismiss();
+
         }
     }
 
@@ -206,6 +206,9 @@ public class FetchImg extends AppCompatActivity {
         {
             iv.setImageResource(R.drawable.peep);
             iv.setForeground(null);
+            imgSelected.clear();
+            clickCount = 0;
+            iv.setImageAlpha(255);
         }
     }
 

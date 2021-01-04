@@ -80,9 +80,7 @@ public class FetchImg extends AppCompatActivity {
         });
     }
 
-
     private class Content extends AsyncTask<Void, Void, Void> {
-    private class Content extends AsyncTask<Void, Integer, Void> {
 
         @Override
         protected void onPreExecute() {
@@ -124,11 +122,6 @@ public class FetchImg extends AppCompatActivity {
 //                      progressDialog.incrementProgressBy(1);
                         publishProgress(i);
                     }
-
-                }
-
-
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -150,16 +143,17 @@ public class FetchImg extends AppCompatActivity {
             {
 
                 imageViews[i].setOnClickListener(new View.OnClickListener() {
+                    boolean clicked = true;
                     @Override
                     public void onClick(View v) {
                         if (clickCount<6){
-                            if (clicked){
+                            if (clicked == false){
                                 v.setAlpha(1);
                                 clicked = true;
                                 clickCount--;
                                 //remove from list?
                             }
-                            else if (!clicked){
+                            else{
                                 v.setAlpha((float) 0.5);
                                 clicked = false;
                                 clickCount++;

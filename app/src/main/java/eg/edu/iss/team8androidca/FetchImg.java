@@ -39,6 +39,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class FetchImg extends AppCompatActivity {
 
@@ -47,12 +48,12 @@ public class FetchImg extends AppCompatActivity {
     ImageView[] imageViews = new ImageView[20];
     ArrayList<Bitmap> imgBits = new ArrayList<Bitmap> ();
     ArrayList<Bitmap> imgSelected= new ArrayList<Bitmap>();
-    ProgressDialog progressDialog;
     Button mfetch;
     EditText mEdit;
     int progress = 0;
     ProgressBar progressBar;
     TextView textView;
+    Toast msg;
 
 
     int clickCount=0;
@@ -66,6 +67,7 @@ public class FetchImg extends AppCompatActivity {
         textView = findViewById(R.id.progress_text);
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);
         progressBar.setMax(20);
+        msg = Toast.makeText(this, "Download Completed!", Toast.LENGTH_SHORT);
         loadDefaultImageViews();
 
         mfetch = (Button) findViewById(R.id.fetch);
@@ -135,6 +137,10 @@ public class FetchImg extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+
+            msg.show();
+            progressBar.setVisibility(ProgressBar.INVISIBLE);
+            textView.setVisibility(textView.INVISIBLE);
 
             for(int i=0 ; i< imgBits.size() ; i++)
             {
@@ -212,14 +218,14 @@ public class FetchImg extends AppCompatActivity {
     private void revertToDefault()
     {
         imgBits.clear();
+        imgSelected.clear();
+        clickCount = 0;
         progressBar.setProgress(0);
         textView.setText("0/" + progressBar.getMax());
         for(ImageView iv : imageViews)
         {
             iv.setImageResource(R.drawable.peep);
             iv.setForeground(null);
-            imgSelected.clear();
-            clickCount = 0;
         }
         for (View v:imageViews)
         {

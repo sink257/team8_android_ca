@@ -1,43 +1,32 @@
 package eg.edu.iss.team8androidca;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ListIterator;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import android.os.AsyncTask;
-import android.os.Build;
-import android.os.Bundle;
-import android.app.Activity;
-import android.os.Handler;
-import android.view.Menu;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.TextView;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.ListIterator;
 
 public class FetchImg extends AppCompatActivity {
 
@@ -72,19 +61,12 @@ public class FetchImg extends AppCompatActivity {
                 revertToDefault();
                 mEdit = (EditText)findViewById(R.id.newURL);
                 url = mEdit.getText().toString();
-                imgBits.clear();
-                progressBar.setProgress(0);
-                for(ImageView iv : imageViews)
-                {
-                    iv.setImageResource(R.drawable.peep);
-                }
-
                 hideKeybaord(v);
+                progressBar.setProgress(0);
                 new Content().execute();
             }
         });
     }
-
 
     private class Content extends AsyncTask<Void, Integer, Void> {
 
@@ -126,13 +108,8 @@ public class FetchImg extends AppCompatActivity {
 //                        textView.setText(i + "/" + progressBar.getMax());
                     }
 //                      progressDialog.incrementProgressBy(1);
-                        publishProgress(i);
-                    }
-
+//                    publishProgress(i);
                 }
-
-
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -145,12 +122,14 @@ public class FetchImg extends AppCompatActivity {
             imageViews[values[0]].setImageBitmap(imgBits.get(values[0]));
 //            progressBar.incrementProgressBy(1);
         }
-  
+
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
 
-            for(int i=0 ; i< 20 /*imgBits.size()*/ ; i++)
+            progressBar.setVisibility(ProgressBar.INVISIBLE);
+
+            for(int i=0 ; i< imgBits.size() ; i++)
             {
 
                 imageViews[i].setOnClickListener(new View.OnClickListener() {
@@ -158,7 +137,7 @@ public class FetchImg extends AppCompatActivity {
                     @RequiresApi(api = Build.VERSION_CODES.M)
                     @Override
                     public void onClick(View v) {
-                    Bitmap img = imgBits.get(v.getId());
+                        Bitmap img = imgBits.get(v.getId());
                         if (imgSelected.contains(img)){
                             v.setForeground(null);
                             v.setAlpha(1);
@@ -167,19 +146,18 @@ public class FetchImg extends AppCompatActivity {
                         }
                         else {
                             if (clickCount<6){
-                            v.setForeground(getDrawable(R.drawable.selected));
-                            v.setAlpha((float) 0.5);
-                            clickCount++;
-                            imgSelected.add(img);
+                                v.setForeground(getDrawable(R.drawable.selected));
+                                v.setAlpha((float) 0.5);
+                                clickCount++;
+                                imgSelected.add(img);
 
                             }
                         }
-
                     }
 
                 });
             }
-//            progressDialog.dismiss();
+
         }
     }
 
@@ -239,4 +217,3 @@ public class FetchImg extends AppCompatActivity {
 
 
 }
-

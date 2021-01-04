@@ -67,6 +67,7 @@ public class FetchImg extends AppCompatActivity {
 
         mfetch = (Button) findViewById(R.id.fetch);
         mfetch.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View v) {
                 revertToDefault();
@@ -78,7 +79,7 @@ public class FetchImg extends AppCompatActivity {
         });
     }
 
-    private class Content extends AsyncTask<Void, Void, Void> {
+    private class Content extends AsyncTask<Void, Integer, Void> {
 
         @Override
         protected void onPreExecute() {
@@ -130,7 +131,7 @@ public class FetchImg extends AppCompatActivity {
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
             imageViews[values[0]].setImageBitmap(imgBits.get(values[0]));
-            progressDialog.incrementProgressBy(1);
+//            progressBar.incrementProgressBy(1);
         }
   
         @Override

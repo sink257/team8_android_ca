@@ -220,8 +220,12 @@ public class FetchImg extends AppCompatActivity {
             iv.setForeground(null);
             imgSelected.clear();
             clickCount = 0;
-            iv.setImageAlpha(255);
         }
+        for (View v:imageViews)
+        {
+            v.setAlpha(1);
+        }
+
     }
 
 

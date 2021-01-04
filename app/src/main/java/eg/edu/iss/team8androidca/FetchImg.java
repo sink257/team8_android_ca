@@ -96,11 +96,11 @@ public class FetchImg extends AppCompatActivity {
 
                 for(int i = 0; i < 20; i++){
                     if(elementIt.hasNext()){
-                        String imgSrc = elementIt.next().absUrl("src");
-                        InputStream input = new java.net.URL(imgSrc).openStream();
-                        Bitmap imgbit = BitmapFactory.decodeStream(input);
-                        imgBits.add(imgbit);
-                        progressDialog.incrementProgressBy(1);
+                            String imgSrc = elementIt.next().absUrl("src");
+                            InputStream input = new java.net.URL(imgSrc).openStream();
+                            Bitmap imgbit = BitmapFactory.decodeStream(input);
+                            imgBits.add(imgbit);
+                            progressDialog.incrementProgressBy(1);
                     }
                 }
 
@@ -140,6 +140,12 @@ public class FetchImg extends AppCompatActivity {
 //                iv.setPadding(0,10,0,10);
                 iv.setId(count);
                 iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                iv.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+//                       v.setVisibility(View.GONE);
+                    }
+                });
                 imageViews[count] = iv;
                 layout.addView(iv);
                 count++;

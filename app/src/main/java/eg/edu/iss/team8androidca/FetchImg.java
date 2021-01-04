@@ -1,11 +1,13 @@
 package eg.edu.iss.team8androidca;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 
 import java.io.File;
@@ -44,13 +46,15 @@ public class FetchImg extends AppCompatActivity {
     LinearLayout gallery;
     ImageView[] imageViews = new ImageView[20];
     ArrayList<Bitmap> imgBits = new ArrayList<Bitmap> ();
+    ArrayList<Bitmap> imgSelected= new ArrayList<Bitmap>();
     ProgressDialog progressDialog;
     Button mfetch;
     EditText mEdit;
     int progress = 0;
     ProgressBar progressBar;
 
-    int clickCount;
+
+    int clickCount=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,23 +67,19 @@ public class FetchImg extends AppCompatActivity {
 
         mfetch = (Button) findViewById(R.id.fetch);
         mfetch.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View v) {
+                revertToDefault();
                 mEdit = (EditText)findViewById(R.id.newURL);
                 url = mEdit.getText().toString();
-                imgBits.clear();
-                for(ImageView iv : imageViews)
-                {
-                    iv.setImageResource(R.drawable.peep);
-                }
-
                 hideKeybaord(v);
                 new Content().execute();
             }
         });
     }
 
-    private class Content extends AsyncTask<Void, Void, Void> {
+    private class Content extends AsyncTask<Void, Integer, Void> {
 
         @Override
         protected void onPreExecute() {
@@ -131,34 +131,39 @@ public class FetchImg extends AppCompatActivity {
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
             imageViews[values[0]].setImageBitmap(imgBits.get(values[0]));
-            progressDialog.incrementProgressBy(1);
+//            progressBar.incrementProgressBy(1);
         }
   
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
 
-            for(int i=0 ; i< 20 /*imgBits.size()*/ ; i++)
+            for(int i=0 ; i< imgBits.size() ; i++)
             {
+
                 imageViews[i].setOnClickListener(new View.OnClickListener() {
-                    boolean clicked = true;
+
+                    @RequiresApi(api = Build.VERSION_CODES.M)
                     @Override
                     public void onClick(View v) {
-                        if (clickCount<6){
-                            if (clicked == false){
-                                v.setAlpha(1);
-                                clicked = true;
-                                clickCount--;
-                                //remove from list?
-                            }
-                            else{
-                                v.setAlpha((float) 0.5);
-                                clicked = false;
-                                clickCount++;
-                                //add to list?
+                    Bitmap img = imgBits.get(v.getId());
+                        if (imgSelected.contains(img)){
+                            v.setForeground(null);
+                            v.setAlpha(1);
+                            clickCount--;
+                            imgSelected.remove(img);
+                        }
+                        else {
+                            if (clickCount<6){
+                            v.setForeground(getDrawable(R.drawable.selected));
+                            v.setAlpha((float) 0.5);
+                            clickCount++;
+                            imgSelected.add(img);
+
                             }
                         }
                     }
+
                 });
             }
 //            progressDialog.dismiss();
@@ -204,5 +209,18 @@ public class FetchImg extends AppCompatActivity {
         InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(v.getApplicationWindowToken(),0);
     }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void revertToDefault()
+    {
+        imgBits.clear();
+        for(ImageView iv : imageViews)
+        {
+            iv.setImageResource(R.drawable.peep);
+            iv.setForeground(null);
+        }
+    }
+
+
 }
 

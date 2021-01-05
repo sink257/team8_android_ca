@@ -56,6 +56,7 @@ public class FetchImg extends AppCompatActivity {
     ProgressBar progressBar;
     TextView textView;
     Toast msg;
+    Content content = null;
 
 
     int clickCount=0;
@@ -81,7 +82,11 @@ public class FetchImg extends AppCompatActivity {
                 mEdit = (EditText)findViewById(R.id.newURL);
                 url = mEdit.getText().toString();
                 hideKeybaord(v);
-                new Content().execute();
+                if (content != null){
+                    content.cancel(true);
+                }
+                content = new Content();
+                content.execute();
             }
         });
     }
@@ -105,18 +110,25 @@ public class FetchImg extends AppCompatActivity {
                 ListIterator<Element> elementIt = imgs.listIterator();
 
                 for(int i = 0; i < 20; i++){
-                    if(elementIt.hasNext()){
-                        String imgSrc = elementIt.next().absUrl("src");
-                        InputStream input = new java.net.URL(imgSrc).openStream();
-                        Bitmap imgbit = BitmapFactory.decodeStream(input);
-                        imgBits.add(imgbit);
-                        progressBar.incrementProgressBy(1);
-                        publishProgress(i);
+                    if (isCancelled())
+                        break;
+                    else
+                    {
+                        if(elementIt.hasNext()){
+                            String imgSrc = elementIt.next().absUrl("src");
+                            InputStream input = new java.net.URL(imgSrc).openStream();
+                            Bitmap imgbit = BitmapFactory.decodeStream(input);
+                            imgBits.add(imgbit);
+                            progressBar.incrementProgressBy(1);
+                            Thread.sleep(100);
+                            publishProgress(i);
 
+                        }
                     }
 
+
                 }
-            } catch (IOException e) {
+            } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
             return null;

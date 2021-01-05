@@ -134,7 +134,7 @@ public class FetchImg extends AppCompatActivity {
             super.onPostExecute(aVoid);
             msg.show();
             progressBar.setVisibility(ProgressBar.INVISIBLE);
-            textView.setVisibility(textView.INVISIBLE);
+            textView.setVisibility(View.INVISIBLE);
 
 
             for(int i=0 ; i< imgBits.size() ; i++)
@@ -145,7 +145,7 @@ public class FetchImg extends AppCompatActivity {
                     @RequiresApi(api = Build.VERSION_CODES.M)
                     @Override
                     public void onClick(View v) {
-                        textView.setVisibility(textView.VISIBLE);
+                        textView.setVisibility(View.VISIBLE);
 
                         Bitmap img = imgBits.get(v.getId());
                         if (imgSelected.contains(img)){
@@ -160,7 +160,6 @@ public class FetchImg extends AppCompatActivity {
                             v.setAlpha((float) 0.5);
                             clickCount++;
                             imgSelected.add(img);
-
                             }
                         }
                         if (imgSelected.size() == 6) {

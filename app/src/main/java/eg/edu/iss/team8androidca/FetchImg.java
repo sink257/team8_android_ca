@@ -4,12 +4,14 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -39,6 +41,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class FetchImg extends AppCompatActivity {
 
@@ -47,11 +50,12 @@ public class FetchImg extends AppCompatActivity {
     ImageView[] imageViews = new ImageView[20];
     ArrayList<Bitmap> imgBits = new ArrayList<Bitmap> ();
     ArrayList<Bitmap> imgSelected= new ArrayList<Bitmap>();
-    ProgressDialog progressDialog;
     Button mfetch;
     EditText mEdit;
     int progress = 0;
     ProgressBar progressBar;
+    TextView textView;
+    Toast msg;
 
 
     int clickCount=0;
@@ -60,8 +64,11 @@ public class FetchImg extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fetch_img);
-
         gallery = findViewById(R.id.gallery);
+        msg = Toast.makeText(this, "Download Completed!", Toast.LENGTH_SHORT);
+        textView = findViewById(R.id.progress_text);
+        progressBar = (ProgressBar) findViewById(R.id.progress_bar);
+        progressBar.setMax(20);
 
         loadDefaultImageViews();
 
@@ -84,17 +91,8 @@ public class FetchImg extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-
-//            progressDialog = new ProgressDialog(FetchImg.this);
-//            progressDialog.setMessage("Imma move it move it...");
-//            progressDialog.setMax(20);
-//            progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-//            progressDialog.show();
-//            progressDialog.setCancelable(true);
-
-            progressBar = (ProgressBar) findViewById(R.id.progress_bar);
-            progressBar.setMax(20);
             progressBar.setVisibility(ProgressBar.VISIBLE);
+            textView.setVisibility(textView.VISIBLE);
         }
 
         @Override
@@ -106,21 +104,18 @@ public class FetchImg extends AppCompatActivity {
 
                 ListIterator<Element> elementIt = imgs.listIterator();
 
-//                TextView textView = (TextView) findViewById(R.id.progress_text);
-
                 for(int i = 0; i < 20; i++){
                     if(elementIt.hasNext()){
                         String imgSrc = elementIt.next().absUrl("src");
                         InputStream input = new java.net.URL(imgSrc).openStream();
                         Bitmap imgbit = BitmapFactory.decodeStream(input);
                         imgBits.add(imgbit);
-
                         progressBar.incrementProgressBy(1);
-//                        textView.setText(i + "/" + progressBar.getMax());
-                    }
-//                      progressDialog.incrementProgressBy(1);
                         publishProgress(i);
+
                     }
+
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -131,12 +126,16 @@ public class FetchImg extends AppCompatActivity {
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
             imageViews[values[0]].setImageBitmap(imgBits.get(values[0]));
-//            progressBar.incrementProgressBy(1);
+            textView.setText(values[0]+1 + "/" + progressBar.getMax());
         }
   
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            msg.show();
+            progressBar.setVisibility(ProgressBar.INVISIBLE);
+            textView.setVisibility(textView.INVISIBLE);
+
 
             for(int i=0 ; i< imgBits.size() ; i++)
             {
@@ -146,7 +145,9 @@ public class FetchImg extends AppCompatActivity {
                     @RequiresApi(api = Build.VERSION_CODES.M)
                     @Override
                     public void onClick(View v) {
-                    Bitmap img = imgBits.get(v.getId());
+                        textView.setVisibility(textView.VISIBLE);
+
+                        Bitmap img = imgBits.get(v.getId());
                         if (imgSelected.contains(img)){
                             v.setForeground(null);
                             v.setAlpha(1);
@@ -162,11 +163,28 @@ public class FetchImg extends AppCompatActivity {
 
                             }
                         }
+                        if (imgSelected.size() == 6) {
+                            byte[] byteArray = null;
+                            int c =1;
+                            Intent intent = new Intent(FetchImg.this, GameActivity.class);
+                            for (int i=0; i<imgSelected.size();i++)
+                            {
+                                Bitmap bitmap = imgSelected.get(i);
+                                //Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
+                                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                                byteArray = stream.toByteArray();
+                                intent.putExtra("selectedImg"+c, byteArray);
+                                c++;
+                            }
+                            startActivity(intent);
+                        }
+                        textView.setText(clickCount + " / 6 images selected");
                     }
 
                 });
             }
-//            progressDialog.dismiss();
+
         }
     }
 
@@ -214,11 +232,20 @@ public class FetchImg extends AppCompatActivity {
     private void revertToDefault()
     {
         imgBits.clear();
+        imgSelected.clear();
+        clickCount = 0;
+        progressBar.setProgress(0);
+        textView.setText("0/" + progressBar.getMax());
         for(ImageView iv : imageViews)
         {
             iv.setImageResource(R.drawable.peep);
             iv.setForeground(null);
         }
+        for (View v:imageViews)
+        {
+            v.setAlpha(1);
+        }
+
     }
 }
 

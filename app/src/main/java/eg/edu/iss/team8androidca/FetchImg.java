@@ -52,12 +52,12 @@ public class FetchImg extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fetch_img);
-
         gallery = findViewById(R.id.gallery);
+        msg = Toast.makeText(this, "Download Completed!", Toast.LENGTH_SHORT);
         textView = findViewById(R.id.progress_text);
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);
         progressBar.setMax(20);
-        msg = Toast.makeText(this, "Download Completed!", Toast.LENGTH_SHORT);
+
         loadDefaultImageViews();
 
         mfetch = (Button) findViewById(R.id.fetch);
@@ -79,7 +79,6 @@ public class FetchImg extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-
             progressBar.setVisibility(ProgressBar.VISIBLE);
             textView.setVisibility(textView.VISIBLE);
         }
@@ -125,7 +124,6 @@ public class FetchImg extends AppCompatActivity {
             msg.show();
             progressBar.setVisibility(ProgressBar.INVISIBLE);
             textView.setVisibility(textView.INVISIBLE);
-
 
             for(int i=0 ; i< imgBits.size() ; i++)
             {

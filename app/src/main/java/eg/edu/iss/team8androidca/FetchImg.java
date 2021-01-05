@@ -87,16 +87,8 @@ public class FetchImg extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
 
-//            progressDialog = new ProgressDialog(FetchImg.this);
-//            progressDialog.setMessage("Imma move it move it...");
-//            progressDialog.setMax(20);
-//            progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-//            progressDialog.show();
-//            progressDialog.setCancelable(true);
-
-            progressBar = (ProgressBar) findViewById(R.id.progress_bar);
-            progressBar.setMax(20);
             progressBar.setVisibility(ProgressBar.VISIBLE);
+            textView.setVisibility(textView.VISIBLE);
         }
 
         @Override
@@ -139,6 +131,9 @@ public class FetchImg extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            msg.show();
+            progressBar.setVisibility(ProgressBar.INVISIBLE);
+            textView.setVisibility(textView.INVISIBLE);
 
             for(int i=0 ; i< imgBits.size() ; i++)
             {
@@ -148,6 +143,9 @@ public class FetchImg extends AppCompatActivity {
                     @RequiresApi(api = Build.VERSION_CODES.M)
                     @Override
                     public void onClick(View v) {
+
+                        textView.setVisibility(textView.VISIBLE);
+
                         Bitmap img = imgBits.get(v.getId());
                         if (imgSelected.contains(img)){
                             v.setForeground(null);
@@ -179,6 +177,7 @@ public class FetchImg extends AppCompatActivity {
                             }
                             startActivity(intent);
                         }
+                        textView.setText(clickCount + " / 6 images selected");
                     }
                 });
             }

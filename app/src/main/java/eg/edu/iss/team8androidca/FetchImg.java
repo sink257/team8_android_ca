@@ -4,12 +4,14 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -146,7 +148,7 @@ public class FetchImg extends AppCompatActivity {
                     @RequiresApi(api = Build.VERSION_CODES.M)
                     @Override
                     public void onClick(View v) {
-                    Bitmap img = imgBits.get(v.getId());
+                        Bitmap img = imgBits.get(v.getId());
                         if (imgSelected.contains(img)){
                             v.setForeground(null);
                             v.setAlpha(1);
@@ -155,15 +157,29 @@ public class FetchImg extends AppCompatActivity {
                         }
                         else {
                             if (clickCount<6){
-                            v.setForeground(getDrawable(R.drawable.selected));
-                            v.setAlpha((float) 0.5);
-                            clickCount++;
-                            imgSelected.add(img);
-
+                                v.setForeground(getDrawable(R.drawable.selected));
+                                v.setAlpha((float) 0.5);
+                                clickCount++;
+                                imgSelected.add(img);
                             }
                         }
+                        if (imgSelected.size() == 6) {
+                            byte[] byteArray = null;
+                            int c =1;
+                            Intent intent = new Intent(FetchImg.this, GameActivity.class);
+                            for (int i=0; i<imgSelected.size();i++)
+                            {
+                                Bitmap bitmap = imgSelected.get(i);
+                                //Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
+                                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                                byteArray = stream.toByteArray();
+                                intent.putExtra("selectedImg"+c, byteArray);
+                                c++;
+                            }
+                            startActivity(intent);
+                        }
                     }
-
                 });
             }
 //            progressDialog.dismiss();

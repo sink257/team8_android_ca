@@ -220,7 +220,5 @@ public class FetchImg extends AppCompatActivity {
             iv.setForeground(null);
         }
     }
-
-
 }
 

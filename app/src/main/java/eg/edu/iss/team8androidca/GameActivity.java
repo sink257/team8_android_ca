@@ -58,13 +58,10 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         numberOfElements = numColumns * numRows;
-
         gridLayout.setColumnCount(numColumns);
         gridLayout.setRowCount(numRows);
 
         timerText = (TextView) findViewById(R.id.timer);
-
-
 
         TextView textview = findViewById(R.id.score);
         String score = "Matched sets: " + String.valueOf(matchCount) + " / " + String.valueOf(numberOfElements / 2);

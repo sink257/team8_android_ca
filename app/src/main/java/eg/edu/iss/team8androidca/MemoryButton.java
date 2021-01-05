@@ -1,6 +1,8 @@
 package eg.edu.iss.team8androidca;
 
 import android.content.Context;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.widget.GridLayout;
 
@@ -29,9 +31,15 @@ public class MemoryButton extends androidx.appcompat.widget.AppCompatButton {
 
         GridLayout.LayoutParams tempParams = new GridLayout.LayoutParams(GridLayout.spec(r), GridLayout.spec(c));
 
-        tempParams.width = (int) getResources().getDisplayMetrics().density * 160;
-        tempParams.height = (int) getResources().getDisplayMetrics().density * 150;
-        tempParams.setMargins(15,15,15,15);
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            tempParams.width = Resources.getSystem().getDisplayMetrics().widthPixels / 3;
+            tempParams.height = Resources.getSystem().getDisplayMetrics().heightPixels / 6;
+        }
+        else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            tempParams.width = Resources.getSystem().getDisplayMetrics().widthPixels / 7;
+            tempParams.height = Resources.getSystem().getDisplayMetrics().heightPixels / 3;
+        }
+        tempParams.setMargins(1,1,1,1);
         setLayoutParams(tempParams);
     }
 

@@ -1,35 +1,46 @@
 package eg.edu.iss.team8androidca;
 
-import android.app.ProgressDialog;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
-import android.os.Build;
-import android.os.Bundle;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.os.Bundle;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ListIterator;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.ListIterator;
-
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.app.Activity;
+import android.os.Handler;
+import android.view.Menu;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 public class FetchImg extends AppCompatActivity {
 
@@ -120,10 +131,10 @@ public class FetchImg extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-
             msg.show();
             progressBar.setVisibility(ProgressBar.INVISIBLE);
             textView.setVisibility(textView.INVISIBLE);
+
 
             for(int i=0 ; i< imgBits.size() ; i++)
             {
@@ -150,6 +161,22 @@ public class FetchImg extends AppCompatActivity {
                             imgSelected.add(img);
 
                             }
+                        }
+                        if (imgSelected.size() == 6) {
+                            byte[] byteArray = null;
+                            int c =1;
+                            Intent intent = new Intent(FetchImg.this, GameActivity.class);
+                            for (int i=0; i<imgSelected.size();i++)
+                            {
+                                Bitmap bitmap = imgSelected.get(i);
+                                //Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
+                                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                                byteArray = stream.toByteArray();
+                                intent.putExtra("selectedImg"+c, byteArray);
+                                c++;
+                            }
+                            startActivity(intent);
                         }
                         textView.setText(clickCount + " / 6 images selected");
                     }

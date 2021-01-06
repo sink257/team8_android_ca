@@ -161,36 +161,40 @@ public class FetchImg extends AppCompatActivity {
                             v.setAlpha(1);
                             clickCount--;
                             imgSelected.remove(img);
+                            if(clickCount<6){mStart.setVisibility(View.INVISIBLE);}
                         }
                         else {
                             if (clickCount<6){
-                            v.setForeground(getDrawable(R.drawable.selected));
-                            v.setAlpha((float) 0.5);
-                            clickCount++;
-                            imgSelected.add(img);
+                                mStart.setVisibility(View.INVISIBLE);
+                                v.setForeground(getDrawable(R.drawable.selected));
+                                v.setAlpha((float) 0.5);
+                                clickCount++;
+                                imgSelected.add(img);
+
                             }
-                        }
-                        if (imgSelected.size() == 6) {
-                            byte[] byteArray = null;
-                            int c =1;
-                            Intent intent = new Intent(FetchImg.this, GameActivity.class);
-                            for (int i=0; i<imgSelected.size();i++)
-                            {
-                                Bitmap bitmap = imgSelected.get(i);
-                                //Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
-                                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                                byteArray = stream.toByteArray();
-                                intent.putExtra("selectedImg"+c, byteArray);
-                                c++;
-                            }
-                            startActivity(intent);
                         }
                         textView.setText(clickCount + " / 6 images selected");
+                        if(clickCount==6){mStart.setVisibility(View.VISIBLE);}
                     }
 
                 });
             }
+
+            mStart.setOnClickListener(v->{
+                byte[] byteArray = null;
+                int c =1;
+                Intent intent = new Intent(FetchImg.this, GameActivity.class);
+                for (int i=0; i<imgSelected.size();i++)
+                {
+                    Bitmap bitmap = imgSelected.get(i);
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                    byteArray = stream.toByteArray();
+                    intent.putExtra("selectedImg"+c, byteArray);
+                    c++;
+                }
+                startActivity(intent);
+            });
 
         }
     }

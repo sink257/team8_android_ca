@@ -268,6 +268,7 @@ public class FetchImg extends AppCompatActivity {
         clickCount = 0;
         progressBar.setProgress(0);
         textView.setText("0/" + progressBar.getMax());
+        mStart.setVisibility(View.INVISIBLE);
 
         for(ImageView iv : imageViews)
         {

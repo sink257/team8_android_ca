@@ -52,6 +52,7 @@ public class FetchImg extends AppCompatActivity {
     ArrayList<Bitmap> imgSelected= new ArrayList<Bitmap>();
     Button mfetch;
     EditText mEdit;
+    Button mStart;
     int progress = 0;
     ProgressBar progressBar;
     TextView textView;
@@ -73,6 +74,7 @@ public class FetchImg extends AppCompatActivity {
         loadDefaultImageViews();
 
         mfetch = (Button) findViewById(R.id.fetch);
+        mStart = (Button) findViewById(R.id.start);
         mfetch.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
@@ -80,10 +82,11 @@ public class FetchImg extends AppCompatActivity {
                 mEdit = (EditText)findViewById(R.id.newURL);
                 url = mEdit.getText().toString();
                 hideKeybaord(v);
+                revertToDefault();
                 if (content!=null){
                     content.cancel(true);
                 }
-                revertToDefault();
+
                 content = new Content();
                 content.execute();
 
@@ -110,12 +113,12 @@ public class FetchImg extends AppCompatActivity {
                 ListIterator<Element> elementIt = imgs.listIterator();
 
                 for(int i = 0; i < 20; i++){
-                    if (isCancelled()){break;}
+//                    if (isCancelled()){break;}
                     if(elementIt.hasNext()){
                         String imgSrc = elementIt.next().absUrl("src");
                         InputStream input = new java.net.URL(imgSrc).openStream();
                         Bitmap imgbit = BitmapFactory.decodeStream(input);
-                        if (isCancelled()){break;}
+                        if (isCancelled()){return null;}
                         imgBits.add(imgbit);
                         progressBar.incrementProgressBy(1);
                         publishProgress(i);
@@ -140,7 +143,7 @@ public class FetchImg extends AppCompatActivity {
             super.onPostExecute(aVoid);
             msg.show();
             progressBar.setVisibility(ProgressBar.INVISIBLE);
-            textView.setVisibility(textView.INVISIBLE);
+            textView.setVisibility(View.INVISIBLE);
 
             for(int i=0 ; i< imgBits.size() ; i++)
             {
@@ -150,7 +153,7 @@ public class FetchImg extends AppCompatActivity {
                     @RequiresApi(api = Build.VERSION_CODES.M)
                     @Override
                     public void onClick(View v) {
-                        textView.setVisibility(textView.VISIBLE);
+                        textView.setVisibility(View.VISIBLE);
 
                         Bitmap img = imgBits.get(v.getId());
                         if (imgSelected.contains(img)){
@@ -158,37 +161,40 @@ public class FetchImg extends AppCompatActivity {
                             v.setAlpha(1);
                             clickCount--;
                             imgSelected.remove(img);
+                            if(clickCount<6){mStart.setVisibility(View.INVISIBLE);}
                         }
                         else {
                             if (clickCount<6){
-                            v.setForeground(getDrawable(R.drawable.selected));
-                            v.setAlpha((float) 0.5);
-                            clickCount++;
-                            imgSelected.add(img);
+                                mStart.setVisibility(View.INVISIBLE);
+                                v.setForeground(getDrawable(R.drawable.selected));
+                                v.setAlpha((float) 0.5);
+                                clickCount++;
+                                imgSelected.add(img);
 
                             }
                         }
-                        if (imgSelected.size() == 6) {
-                            byte[] byteArray = null;
-                            int c =1;
-                            Intent intent = new Intent(FetchImg.this, GameActivity.class);
-                            for (int i=0; i<imgSelected.size();i++)
-                            {
-                                Bitmap bitmap = imgSelected.get(i);
-                                //Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
-                                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                                byteArray = stream.toByteArray();
-                                intent.putExtra("selectedImg"+c, byteArray);
-                                c++;
-                            }
-                            startActivity(intent);
-                        }
                         textView.setText(clickCount + " / 6 images selected");
+                        if(clickCount==6){mStart.setVisibility(View.VISIBLE);}
                     }
 
                 });
             }
+
+            mStart.setOnClickListener(v->{
+                byte[] byteArray = null;
+                int c =1;
+                Intent intent = new Intent(FetchImg.this, GameActivity.class);
+                for (int i=0; i<imgSelected.size();i++)
+                {
+                    Bitmap bitmap = imgSelected.get(i);
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                    byteArray = stream.toByteArray();
+                    intent.putExtra("selectedImg"+c, byteArray);
+                    c++;
+                }
+                startActivity(intent);
+            });
 
         }
     }
@@ -237,6 +243,7 @@ public class FetchImg extends AppCompatActivity {
         {
             iv.setImageResource(R.drawable.peep);
             iv.setForeground(null);
+            iv.setClickable(false);
         }
         for (View v:imageViews)
         {

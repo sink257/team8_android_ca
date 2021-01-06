@@ -3,6 +3,7 @@ package eg.edu.iss.team8androidca;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -13,6 +14,7 @@ import android.os.Handler;
 import android.view.View;
 import android.widget.GridLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -97,10 +99,18 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 gridLayout.addView(tempButton);
             }
         }
+
+            TextView instructions = findViewById(R.id.instruction);
+            instructions.setText("Click on one of the lightbulbs to start matching!");
+
+
     }
 
     @Override
     public void onClick(View view) {
+
+        TextView instructions = findViewById(R.id.instruction);
+        instructions.setText("");
 
         if (isBusy)
             return;
@@ -135,6 +145,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             matchCount++;
             final MediaPlayer correctSound = MediaPlayer.create(this, R.raw.correct);
             correctSound.start();
+            Toast msg = Toast.makeText(this, "Good job! Correct match!", Toast.LENGTH_SHORT);
+            msg.show();
 
             TextView textview = findViewById(R.id.score);
             String score = "Matched sets: " + String.valueOf(matchCount) + " / " + String.valueOf(numberOfElements / 2);
@@ -142,6 +154,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
             if (matchCount == numberOfElements / 2) {
                 timerTask.cancel();
+                final MediaPlayer winningSound = MediaPlayer.create(this, R.raw.winning);
+                winningSound.start();
 
                 if (time >= fastestTime) {
                     gameFinished();
@@ -160,6 +174,9 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             selectedButton2.flip();
             final MediaPlayer wrongSound = MediaPlayer.create(this, R.raw.wrong);
             wrongSound.start();
+            Toast msg = Toast.makeText(this, "Wrong match, please try again!", Toast.LENGTH_SHORT);
+            msg.show();
+
             isBusy = true;
 
             final Handler handler = new Handler();
@@ -173,7 +190,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                     selectedButton2 = null;
                     isBusy = false;
                 }
-            }, 500);
+            }, 1000);
         }
     }
 

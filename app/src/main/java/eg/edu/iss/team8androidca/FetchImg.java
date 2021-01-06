@@ -2,9 +2,12 @@ package eg.edu.iss.team8androidca;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
@@ -58,6 +61,9 @@ public class FetchImg extends AppCompatActivity {
     TextView textView;
     Toast msg;
     Content content = null;
+    int imgWidth;
+    int imgHeight;
+
 
     int clickCount=0;
 
@@ -118,6 +124,20 @@ public class FetchImg extends AppCompatActivity {
                         String imgSrc = elementIt.next().absUrl("src");
                         InputStream input = new java.net.URL(imgSrc).openStream();
                         Bitmap imgbit = BitmapFactory.decodeStream(input);
+
+                        //crop the downloaded img to imageView ratio
+                        float imgBitRatio = (float) imgbit.getHeight() / imgbit.getWidth();
+                        float imgViewRatio = (float) imageViews[1].getMeasuredHeight() / imageViews[1].getMeasuredWidth();
+                        if(imgViewRatio>imgBitRatio){
+                            int imgbitWeight = (int)(imgbit.getHeight()/imgViewRatio);
+                            int startPosX = (int)(imgbit.getWidth() - (imgbit.getHeight()/imgViewRatio))/2;
+                            imgbit = Bitmap.createBitmap(imgbit, startPosX,0, imgbitWeight, imgbit.getHeight());
+                        } else{
+                            int imgbitHeight = (int)(imgbit.getWidth()*imgViewRatio);
+                            int startPosY = (int)(imgbit.getHeight() - (imgbit.getWidth()*imgViewRatio))/2;
+                            imgbit = Bitmap.createBitmap(imgbit, 0,startPosY, imgbit.getWidth(),imgbitHeight );
+                        }
+
                         if (isCancelled()){return null;}
                         imgBits.add(imgbit);
                         progressBar.incrementProgressBy(1);
@@ -143,7 +163,7 @@ public class FetchImg extends AppCompatActivity {
             super.onPostExecute(aVoid);
             msg.show();
             progressBar.setVisibility(ProgressBar.INVISIBLE);
-            textView.setVisibility(View.INVISIBLE);
+            textView.setText("Please select 6 images");
 
             for(int i=0 ; i< imgBits.size() ; i++)
             {
@@ -204,13 +224,26 @@ public class FetchImg extends AppCompatActivity {
         linearParams.setMargins(10,0,10,0);
         LinearLayout.LayoutParams ivParams = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT,1);
         ivParams.setMargins(10,10,10,10);
+
+        int column, row;
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            column = 4;
+            row = 5;
+        }else{
+            column = 10;
+            row = 2;
+            ConstraintLayout.LayoutParams lp = (ConstraintLayout.LayoutParams) gallery.getLayoutParams();
+            lp.height = 480;
+            gallery.setLayoutParams(lp);
+        }
+
         int count = 0 ;
-        for(int i=0 ; i<5; i++){
+        for(int i=0 ; i<row; i++){
             LinearLayout layout = new LinearLayout(this);
-            layout.setWeightSum(4);
+            layout.setWeightSum(column);
             layout.setLayoutParams(linearParams);
 
-            for(int j=0 ; j<4 ; j++){
+            for(int j=0 ; j<column ; j++){
                 ImageView iv = new ImageView(this);
                 iv.setImageResource(R.drawable.peep);
                 iv.setLayoutParams(ivParams);
@@ -238,6 +271,7 @@ public class FetchImg extends AppCompatActivity {
         clickCount = 0;
         progressBar.setProgress(0);
         textView.setText("0/" + progressBar.getMax());
+        mStart.setVisibility(View.INVISIBLE);
 
         for(ImageView iv : imageViews)
         {

@@ -125,14 +125,17 @@ public class FetchImg extends AppCompatActivity {
                         InputStream input = new java.net.URL(imgSrc).openStream();
                         Bitmap imgbit = BitmapFactory.decodeStream(input);
 
-                        if(imgbit.getWidth()>imgbit.getHeight()){
-                            int imgViewWidth = imageViews[1].getMeasuredWidth();
-                            int startPosX = (imgbit.getWidth()-imgViewWidth)/2;
-                            imgbit = Bitmap.createBitmap(imgbit, startPosX,0, imgViewWidth, imgbit.getHeight());
+                        //crop the downloaded img to imageView ratio
+                        float imgBitRatio = (float) imgbit.getHeight() / imgbit.getWidth();
+                        float imgViewRatio = (float) imageViews[1].getMeasuredHeight() / imageViews[1].getMeasuredWidth();
+                        if(imgViewRatio>imgBitRatio){
+                            int imgbitWeight = (int)(imgbit.getHeight()/imgViewRatio);
+                            int startPosX = (int)(imgbit.getWidth() - (imgbit.getHeight()/imgViewRatio))/2;
+                            imgbit = Bitmap.createBitmap(imgbit, startPosX,0, imgbitWeight, imgbit.getHeight());
                         } else{
-                            int imgViewHeight = imageViews[1].getMeasuredHeight();
-                            int startPosY = (imgbit.getHeight()-imgViewHeight)/2;
-                            imgbit = Bitmap.createBitmap(imgbit, 0,startPosY, imgbit.getWidth(), imgViewHeight);
+                            int imgbitHeight = (int)(imgbit.getWidth()*imgViewRatio);
+                            int startPosY = (int)(imgbit.getHeight() - (imgbit.getWidth()*imgViewRatio))/2;
+                            imgbit = Bitmap.createBitmap(imgbit, 0,startPosY, imgbit.getWidth(),imgbitHeight );
                         }
 
                         if (isCancelled()){return null;}
@@ -160,7 +163,7 @@ public class FetchImg extends AppCompatActivity {
             super.onPostExecute(aVoid);
             msg.show();
             progressBar.setVisibility(ProgressBar.INVISIBLE);
-            textView.setVisibility(View.INVISIBLE);
+            textView.setText("Please select 6 images");
 
             for(int i=0 ; i< imgBits.size() ; i++)
             {

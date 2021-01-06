@@ -83,10 +83,11 @@ public class FetchImg extends AppCompatActivity {
                 mEdit = (EditText)findViewById(R.id.newURL);
                 url = mEdit.getText().toString();
                 hideKeybaord(v);
+                revertToDefault();
                 if (content!=null){
                     content.cancel(true);
                 }
-                revertToDefault();
+
                 content = new Content();
                 content.execute();
 
@@ -239,6 +240,7 @@ public class FetchImg extends AppCompatActivity {
         {
             iv.setImageResource(R.drawable.peep);
             iv.setForeground(null);
+            iv.setClickable(false);
         }
         for (View v:imageViews)
         {

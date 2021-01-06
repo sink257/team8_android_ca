@@ -3,6 +3,8 @@ package eg.edu.iss.team8androidca;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.widget.GridLayout;
 
@@ -10,7 +12,7 @@ public class MemoryButton extends androidx.appcompat.widget.AppCompatButton {
 
     protected int row;
     protected int column;
-    protected int frontDrawableId;
+    protected Bitmap frontImage;
 
     protected boolean isFlipped = false;
     protected boolean isMatched = false;
@@ -18,13 +20,15 @@ public class MemoryButton extends androidx.appcompat.widget.AppCompatButton {
     protected Drawable front;
     protected Drawable back;
 
-    public MemoryButton(Context context, int r, int c, int frontImageDrawableId) {
+    public MemoryButton(Context context, int r, int c, Bitmap frontImage) {
         super(context);
         row = r;
         column = c;
-        frontDrawableId = frontImageDrawableId;
+        this.frontImage = frontImage;
 
-        front = context.getDrawable(frontImageDrawableId);
+        BitmapDrawable bdrawable = new BitmapDrawable(context.getResources(),frontImage);
+
+        front = bdrawable;
         back = context.getDrawable(R.drawable.idea);
 
         setBackground(back);
@@ -51,8 +55,8 @@ public class MemoryButton extends androidx.appcompat.widget.AppCompatButton {
         isMatched = matched;
     }
 
-    public int getFrontDrawableId() {
-        return frontDrawableId;
+    public Bitmap getFrontImage() {
+        return frontImage;
     }
 
     public void flip() {

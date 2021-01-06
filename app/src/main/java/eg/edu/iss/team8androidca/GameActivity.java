@@ -59,7 +59,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         numberOfElements = numColumns * numRows;
-
         gridLayout.setColumnCount(numColumns);
         gridLayout.setRowCount(numRows);
 

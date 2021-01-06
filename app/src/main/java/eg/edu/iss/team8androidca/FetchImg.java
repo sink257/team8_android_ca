@@ -56,6 +56,7 @@ public class FetchImg extends AppCompatActivity {
     ProgressBar progressBar;
     TextView textView;
     Toast msg;
+    Content content = null;
 
 
     int clickCount=0;
@@ -77,11 +78,16 @@ public class FetchImg extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View v) {
-                revertToDefault();
                 mEdit = (EditText)findViewById(R.id.newURL);
                 url = mEdit.getText().toString();
                 hideKeybaord(v);
-                new Content().execute();
+                if (content!=null){
+                    content.cancel(true);
+                }
+                revertToDefault();
+                content = new Content();
+                content.execute();
+
             }
         });
     }
@@ -105,16 +111,16 @@ public class FetchImg extends AppCompatActivity {
                 ListIterator<Element> elementIt = imgs.listIterator();
 
                 for(int i = 0; i < 20; i++){
+                    if (isCancelled()){break;}
                     if(elementIt.hasNext()){
                         String imgSrc = elementIt.next().absUrl("src");
                         InputStream input = new java.net.URL(imgSrc).openStream();
                         Bitmap imgbit = BitmapFactory.decodeStream(input);
+                        if (isCancelled()){break;}
                         imgBits.add(imgbit);
                         progressBar.incrementProgressBy(1);
                         publishProgress(i);
-
                     }
-
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -125,8 +131,9 @@ public class FetchImg extends AppCompatActivity {
         @Override
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
+            if(!isCancelled()){
             imageViews[values[0]].setImageBitmap(imgBits.get(values[0]));
-            textView.setText(values[0]+1 + "/" + progressBar.getMax());
+            textView.setText(values[0]+1 + "/" + progressBar.getMax());}
         }
   
         @Override
@@ -135,7 +142,6 @@ public class FetchImg extends AppCompatActivity {
             msg.show();
             progressBar.setVisibility(ProgressBar.INVISIBLE);
             textView.setVisibility(View.INVISIBLE);
-
 
             for(int i=0 ; i< imgBits.size() ; i++)
             {
@@ -212,15 +218,6 @@ public class FetchImg extends AppCompatActivity {
         }
     }
 
-    private void loadFetchedImageViews(String src, ImageView iv) {
-        try {
-            InputStream input = new java.net.URL(src).openStream();
-            Bitmap imgbit = BitmapFactory.decodeStream(input);
-            iv.setImageBitmap(imgbit);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     private void hideKeybaord(View v) {
         InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
@@ -235,6 +232,7 @@ public class FetchImg extends AppCompatActivity {
         clickCount = 0;
         progressBar.setProgress(0);
         textView.setText("0/" + progressBar.getMax());
+
         for(ImageView iv : imageViews)
         {
             iv.setImageResource(R.drawable.peep);
@@ -246,7 +244,5 @@ public class FetchImg extends AppCompatActivity {
         }
 
     }
-
-
 }
 

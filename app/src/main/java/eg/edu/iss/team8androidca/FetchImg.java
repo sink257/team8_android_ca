@@ -52,6 +52,7 @@ public class FetchImg extends AppCompatActivity {
     ArrayList<Bitmap> imgSelected= new ArrayList<Bitmap>();
     Button mfetch;
     EditText mEdit;
+    Button mStart;
     int progress = 0;
     ProgressBar progressBar;
     TextView textView;
@@ -74,6 +75,7 @@ public class FetchImg extends AppCompatActivity {
         loadDefaultImageViews();
 
         mfetch = (Button) findViewById(R.id.fetch);
+        mStart = (Button) findViewById(R.id.start);
         mfetch.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override

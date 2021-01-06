@@ -113,12 +113,12 @@ public class FetchImg extends AppCompatActivity {
                 ListIterator<Element> elementIt = imgs.listIterator();
 
                 for(int i = 0; i < 20; i++){
-                    if (isCancelled()){break;}
+//                    if (isCancelled()){break;}
                     if(elementIt.hasNext()){
                         String imgSrc = elementIt.next().absUrl("src");
                         InputStream input = new java.net.URL(imgSrc).openStream();
                         Bitmap imgbit = BitmapFactory.decodeStream(input);
-                        if (isCancelled()){break;}
+                        if (isCancelled()){return null;}
                         imgBits.add(imgbit);
                         progressBar.incrementProgressBy(1);
                         publishProgress(i);

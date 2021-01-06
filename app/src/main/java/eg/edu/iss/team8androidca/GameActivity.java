@@ -83,6 +83,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
         buttons = new MemoryButton[numberOfElements];
 
+
         buttonGraphicLocations = new int[numberOfElements];
 
         shuffleButtonGraphics();

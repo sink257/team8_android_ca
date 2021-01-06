@@ -26,10 +26,11 @@ public class MemoryButton extends androidx.appcompat.widget.AppCompatButton {
         column = c;
         this.frontImage = frontImage;
 
-        BitmapDrawable bdrawable = new BitmapDrawable(context.getResources(),frontImage);
+        Bitmap scaled = Bitmap.createScaledBitmap(frontImage, (int)(frontImage.getWidth()*0.5), (int)(frontImage.getHeight()*0.5), true);
+        BitmapDrawable bdrawable = new BitmapDrawable(context.getResources(),scaled);
 
         front = bdrawable;
-        back = context.getDrawable(R.drawable.idea);
+        back = context.getDrawable(R.drawable.bigquestion);
 
         setBackground(back);
 
@@ -40,10 +41,10 @@ public class MemoryButton extends androidx.appcompat.widget.AppCompatButton {
             tempParams.height = Resources.getSystem().getDisplayMetrics().heightPixels / 6;
         }
         else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            tempParams.width = Resources.getSystem().getDisplayMetrics().widthPixels / 7;
+            tempParams.width = Resources.getSystem().getDisplayMetrics().widthPixels / 6;
             tempParams.height = Resources.getSystem().getDisplayMetrics().heightPixels / 3;
         }
-        tempParams.setMargins(1,1,1,1);
+        tempParams.setMargins(3,3,3,3);
         setLayoutParams(tempParams);
     }
 

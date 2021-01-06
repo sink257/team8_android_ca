@@ -59,7 +59,6 @@ public class FetchImg extends AppCompatActivity {
     Toast msg;
     Content content = null;
 
-
     int clickCount=0;
 
     @Override

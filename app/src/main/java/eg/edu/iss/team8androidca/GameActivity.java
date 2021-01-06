@@ -29,7 +29,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private int numberOfElements;
     private MemoryButton[] buttons;
     private int[] buttonGraphicLocations;
-    private int[] buttonGraphicsId;
+    ArrayList<Bitmap> buttonGraphics = new ArrayList<Bitmap>();
     private int matchCount = 0;
     private TextView timerText;
     private TextView fastestTimeText;
@@ -46,6 +46,14 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
         GridLayout gridLayout = (GridLayout) findViewById(R.id.grid_layout_activity2);
+
+        Intent intent = getIntent();
+
+        for (int i = 1; i<7; i++){
+            byte[] bitmapdata  = intent.getByteArrayExtra("selectedImg"+i);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(bitmapdata, 0, bitmapdata.length);
+            buttonGraphics.add(bitmap);
+        }
 
         int numColumns = 0;
         int numRows = 0;
@@ -75,14 +83,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
         buttons = new MemoryButton[numberOfElements];
 
-        buttonGraphicsId = new int[numberOfElements / 2];
-
-        buttonGraphicsId[0] = R.drawable.apple;
-        buttonGraphicsId[1] = R.drawable.banana;
-        buttonGraphicsId[2] = R.drawable.kiwi;
-        buttonGraphicsId[3] = R.drawable.oranges;
-        buttonGraphicsId[4] = R.drawable.strawberry;
-        buttonGraphicsId[5] = R.drawable.watermelon;
 
         buttonGraphicLocations = new int[numberOfElements];
 
@@ -90,7 +90,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
         for (int r = 0; r < numRows; r++) {
             for (int c = 0; c < numColumns; c++) {
-                MemoryButton tempButton = new MemoryButton(this, r, c, buttonGraphicsId[buttonGraphicLocations[r * numColumns + c]]);
+                MemoryButton tempButton = new MemoryButton(this, r, c, buttonGraphics.get(buttonGraphicLocations[r * numColumns + c]));
                 tempButton.setId(View.generateViewId());
                 tempButton.setOnClickListener(this);
                 buttons[r * numColumns + c] = tempButton;
@@ -98,7 +98,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
     }
-
 
     @Override
     public void onClick(View view) {
@@ -122,7 +121,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             return;
         }
 
-        if (selectedButton1.getFrontDrawableId() == button.getFrontDrawableId()) {
+        if (selectedButton1.getFrontImage() == button.getFrontImage()) {
             button.flip();
 
             button.setMatched(true);

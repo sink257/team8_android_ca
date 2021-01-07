@@ -77,15 +77,17 @@ public class FetchImg extends AppCompatActivity {
             public void onClick(View v) {
                 mEdit = (EditText) findViewById(R.id.newURL);
                 url = mEdit.getText().toString();
-                if(!Patterns.WEB_URL.matcher(url).matches()){
+                if (!Patterns.WEB_URL.matcher(url).matches()) {
                     mEdit.setError("Please enter a valid url");
                     return;
-                } else if(!url.startsWith("http://") && !url.startsWith("www.")){
+                }
+                else if (!url.startsWith("http://")) {
                     url = "http://" + url;
                 }
-                hideKeyboard(v);
-
-
+                else if (url.startsWith("www.")) {
+                    url = "http://" + url;
+                }
+                    hideKeyboard(v);
                     revertToDefault();
 
                     if (content != null) {
@@ -94,9 +96,8 @@ public class FetchImg extends AppCompatActivity {
 
                     content = new Content();
                     content.execute();
+                }
 
-
-            }
         });
     }
 

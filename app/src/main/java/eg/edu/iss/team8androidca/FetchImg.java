@@ -74,7 +74,7 @@ public class FetchImg extends AppCompatActivity {
             public void onClick(View v) {
                 mEdit = (EditText) findViewById(R.id.newURL);
                 url = mEdit.getText().toString();
-                hideKeybaord(v);
+                hideKeyboard(v);
                 revertToDefault();
                 if (content != null) {
                     content.cancel(true);
@@ -249,7 +249,7 @@ public class FetchImg extends AppCompatActivity {
     }
 
 
-    private void hideKeybaord(View v) {
+    private void hideKeyboard(View v) {
         InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(v.getApplicationWindowToken(), 0);
     }

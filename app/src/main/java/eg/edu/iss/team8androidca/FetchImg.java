@@ -84,7 +84,7 @@ public class FetchImg extends AppCompatActivity {
                 }
                 hideKeyboard(v);
 
-                if (URLUtil.isValidUrl(url) == true) {
+
                     revertToDefault();
 
                     if (content != null) {
@@ -93,10 +93,8 @@ public class FetchImg extends AppCompatActivity {
 
                     content = new Content();
                     content.execute();
-                }
-                else {
 
-                }
+
             }
         });
     }

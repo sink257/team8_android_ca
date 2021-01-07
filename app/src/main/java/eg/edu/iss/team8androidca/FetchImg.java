@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.URLUtil;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -46,7 +47,7 @@ public class FetchImg extends AppCompatActivity {
     int progress = 0;
     ProgressBar progressBar;
     TextView textView;
-    Toast msg;
+    Toast msg, opps;
     Content content = null;
     int imgWidth;
     int imgHeight;
@@ -60,6 +61,7 @@ public class FetchImg extends AppCompatActivity {
         setContentView(R.layout.activity_fetch_img);
         gallery = findViewById(R.id.gallery);
         msg = Toast.makeText(this, "Download Completed!", Toast.LENGTH_SHORT);
+        opps = Toast.makeText(this, "Opps!, Choose another url with 6 or more images", Toast.LENGTH_LONG);
         textView = findViewById(R.id.progress_text);
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);
         progressBar.setMax(20);
@@ -75,14 +77,20 @@ public class FetchImg extends AppCompatActivity {
                 mEdit = (EditText) findViewById(R.id.newURL);
                 url = mEdit.getText().toString();
                 hideKeyboard(v);
-                revertToDefault();
-                if (content != null) {
-                    content.cancel(true);
+
+                if (URLUtil.isValidUrl(url) == true) {
+                    revertToDefault();
+
+                    if (content != null) {
+                        content.cancel(true);
+                    }
+
+                    content = new Content();
+                    content.execute();
                 }
+                else {
 
-                content = new Content();
-                content.execute();
-
+                }
             }
         });
     }
@@ -151,62 +159,72 @@ public class FetchImg extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            msg.show();
             progressBar.setVisibility(ProgressBar.INVISIBLE);
-            textView.setText("Please select 6 images");
 
-            for (int i = 0; i < imgBits.size(); i++) {
+            if (imgBits.size() < 6){
+                textView.setVisibility(View.INVISIBLE);
+                opps.show();
 
-                imageViews[i].setOnClickListener(new View.OnClickListener() {
-
-                    @RequiresApi(api = Build.VERSION_CODES.M)
-                    @Override
-                    public void onClick(View v) {
-                        textView.setVisibility(View.VISIBLE);
-
-                        Bitmap img = imgBits.get(v.getId());
-                        if (imgSelected.contains(img)) {
-                            v.setForeground(null);
-                            v.setAlpha(1);
-                            clickCount--;
-                            imgSelected.remove(img);
-                            if (clickCount < 6) {
-                                mStart.setVisibility(View.INVISIBLE);
-                            }
-                        } else {
-                            if (clickCount < 6) {
-                                mStart.setVisibility(View.INVISIBLE);
-                                v.setForeground(getDrawable(R.drawable.selected));
-                                v.setAlpha((float) 0.5);
-                                clickCount++;
-                                imgSelected.add(img);
-
-                            }
-                        }
-                        textView.setText(clickCount + " / 6 images selected");
-                        if (clickCount == 6) {
-                            mStart.setVisibility(View.VISIBLE);
-                        }
-                    }
-
-                });
             }
 
-            mStart.setOnClickListener(v -> {
-                byte[] byteArray = null;
-                int c = 1;
-                Intent intent = new Intent(FetchImg.this, GameActivity.class);
-                for (int i = 0; i < imgSelected.size(); i++) {
-                    Bitmap bitmap = imgSelected.get(i);
-                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                    byteArray = stream.toByteArray();
-                    intent.putExtra("selectedImg" + c, byteArray);
-                    c++;
-                }
-                startActivity(intent);
-            });
+            else {
+                msg.show();
 
+                textView.setText("Please select 6 images");
+
+                for (int i = 0; i < imgBits.size(); i++) {
+
+                    imageViews[i].setOnClickListener(new View.OnClickListener() {
+
+                        @RequiresApi(api = Build.VERSION_CODES.M)
+                        @Override
+                        public void onClick(View v) {
+                            textView.setVisibility(View.VISIBLE);
+
+                            Bitmap img = imgBits.get(v.getId());
+                            if (imgSelected.contains(img)) {
+                                v.setForeground(null);
+                                v.setAlpha(1);
+                                clickCount--;
+                                imgSelected.remove(img);
+                                if (clickCount < 6) {
+                                    mStart.setVisibility(View.INVISIBLE);
+                                }
+                            } else {
+                                if (clickCount < 6) {
+                                    mStart.setVisibility(View.INVISIBLE);
+                                    v.setForeground(getDrawable(R.drawable.selected));
+                                    v.setAlpha((float) 0.5);
+                                    clickCount++;
+                                    imgSelected.add(img);
+
+                                }
+                            }
+                            textView.setText(clickCount + " / 6 images selected");
+                            if (clickCount == 6) {
+                                mStart.setVisibility(View.VISIBLE);
+                            }
+                        }
+
+                    });
+                }
+
+                mStart.setOnClickListener(v -> {
+                    byte[] byteArray = null;
+                    int c = 1;
+                    Intent intent = new Intent(FetchImg.this, GameActivity.class);
+                    for (int i = 0; i < imgSelected.size(); i++) {
+                        Bitmap bitmap = imgSelected.get(i);
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                        byteArray = stream.toByteArray();
+                        intent.putExtra("selectedImg" + c, byteArray);
+                        c++;
+                    }
+                    startActivity(intent);
+                });
+
+            }
         }
     }
 

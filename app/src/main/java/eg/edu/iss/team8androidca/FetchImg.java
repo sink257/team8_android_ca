@@ -7,9 +7,11 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Patterns;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.URLUtil;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -74,6 +76,11 @@ public class FetchImg extends AppCompatActivity {
             public void onClick(View v) {
                 mEdit = (EditText) findViewById(R.id.newURL);
                 url = mEdit.getText().toString();
+                if(!Patterns.WEB_URL.matcher(url).matches()){
+//                    Toast.makeText(getApplicationContext(), "Enter valid url", Toast.LENGTH_LONG).show();
+                    mEdit.setError("Please enter a valid url");
+                    return;
+                }
                 hideKeyboard(v);
                 revertToDefault();
                 if (content != null) {

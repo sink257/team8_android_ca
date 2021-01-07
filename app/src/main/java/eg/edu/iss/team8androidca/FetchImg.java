@@ -33,6 +33,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
 import android.os.Handler;
+import android.util.Patterns;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,9 +61,11 @@ public class FetchImg extends AppCompatActivity {
     ProgressBar progressBar;
     TextView textView;
     Toast msg;
+    Toast error;
     Content content = null;
     int imgWidth;
     int imgHeight;
+    boolean urlHasError = false;
 
 
     int clickCount=0;
@@ -73,6 +76,7 @@ public class FetchImg extends AppCompatActivity {
         setContentView(R.layout.activity_fetch_img);
         gallery = findViewById(R.id.gallery);
         msg = Toast.makeText(this, "Download Completed!", Toast.LENGTH_SHORT);
+        error = Toast.makeText(this, "Please enter a valid url!", Toast.LENGTH_SHORT);
         textView = findViewById(R.id.progress_text);
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);
         progressBar.setMax(20);
@@ -87,12 +91,12 @@ public class FetchImg extends AppCompatActivity {
             public void onClick(View v) {
                 mEdit = (EditText)findViewById(R.id.newURL);
                 url = mEdit.getText().toString();
+
                 hideKeybaord(v);
                 revertToDefault();
                 if (content!=null){
                     content.cancel(true);
                 }
-
                 content = new Content();
                 content.execute();
 
@@ -112,14 +116,13 @@ public class FetchImg extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... voids) {
             try {
+
                 Document document = Jsoup.connect(url).get();
                 //select all img elements
                 Elements imgs = document.select("img[src~=(?i)\\.(png|jpe?g)]");
-
                 ListIterator<Element> elementIt = imgs.listIterator();
 
                 for(int i = 0; i < 20; i++){
-//                    if (isCancelled()){break;}
                     if(elementIt.hasNext()){
                         String imgSrc = elementIt.next().absUrl("src");
                         InputStream input = new java.net.URL(imgSrc).openStream();
@@ -129,9 +132,9 @@ public class FetchImg extends AppCompatActivity {
                         float imgBitRatio = (float) imgbit.getHeight() / imgbit.getWidth();
                         float imgViewRatio = (float) imageViews[1].getMeasuredHeight() / imageViews[1].getMeasuredWidth();
                         if(imgViewRatio>imgBitRatio){
-                            int imgbitWeight = (int)(imgbit.getHeight()/imgViewRatio);
+                            int imgbitWidth = (int)(imgbit.getHeight()/imgViewRatio);
                             int startPosX = (int)(imgbit.getWidth() - (imgbit.getHeight()/imgViewRatio))/2;
-                            imgbit = Bitmap.createBitmap(imgbit, startPosX,0, imgbitWeight, imgbit.getHeight());
+                            imgbit = Bitmap.createBitmap(imgbit, startPosX,0, imgbitWidth, imgbit.getHeight());
                         } else{
                             int imgbitHeight = (int)(imgbit.getWidth()*imgViewRatio);
                             int startPosY = (int)(imgbit.getHeight() - (imgbit.getWidth()*imgViewRatio))/2;
@@ -167,7 +170,6 @@ public class FetchImg extends AppCompatActivity {
 
             for(int i=0 ; i< imgBits.size() ; i++)
             {
-
                 imageViews[i].setOnClickListener(new View.OnClickListener() {
 
                     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -190,7 +192,6 @@ public class FetchImg extends AppCompatActivity {
                                 v.setAlpha((float) 0.5);
                                 clickCount++;
                                 imgSelected.add(img);
-
                             }
                         }
                         textView.setText(clickCount + " / 6 images selected");
@@ -257,7 +258,6 @@ public class FetchImg extends AppCompatActivity {
         }
     }
 
-
     private void hideKeybaord(View v) {
         InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(v.getApplicationWindowToken(),0);
@@ -283,7 +283,6 @@ public class FetchImg extends AppCompatActivity {
         {
             v.setAlpha(1);
         }
-
     }
 }
 

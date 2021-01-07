@@ -80,8 +80,10 @@ public class FetchImg extends AppCompatActivity {
                 if(!Patterns.WEB_URL.matcher(url).matches()){
                     mEdit.setError("Please enter a valid url");
                     return;
-                } else if(!url.startsWith("http://") && !url.startsWith("www.")){
+                } else if(!url.startsWith("http://")){
                     url = "http://" + url;
+                } else if(!url.startsWith("www.")){
+                    url = "www." + url;
                 }
                 hideKeyboard(v);
 

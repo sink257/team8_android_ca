@@ -23,6 +23,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -33,10 +35,12 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
 import android.os.Handler;
+import android.util.Patterns;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.URLUtil;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -45,6 +49,12 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.basgeekball.awesomevalidation.AwesomeValidation;
+
+import static android.util.Patterns.WEB_URL;
+import static com.basgeekball.awesomevalidation.ValidationStyle.BASIC;
+import static eg.edu.iss.team8androidca.R.id.newURL;
 
 public class FetchImg extends AppCompatActivity {
 
@@ -63,6 +73,7 @@ public class FetchImg extends AppCompatActivity {
     Content content = null;
     int imgWidth;
     int imgHeight;
+    AwesomeValidation awesomeValidation;
 
 
     int clickCount=0;
@@ -85,8 +96,10 @@ public class FetchImg extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View v) {
-                mEdit = (EditText)findViewById(R.id.newURL);
+                mEdit = (EditText)findViewById(newURL);
                 url = mEdit.getText().toString();
+                awesomeValidation = new AwesomeValidation(BASIC);
+                awesomeValidation.addValidation(this, R.id.newURL, WEB_URL, R.string.invalid);
                 hideKeybaord(v);
                 revertToDefault();
                 if (content!=null){

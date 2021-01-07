@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Team 8 Android CA</string>
+    <string name="invalid">Please enter a valid URL</string>
 </resources>

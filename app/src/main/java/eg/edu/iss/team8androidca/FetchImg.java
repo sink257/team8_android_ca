@@ -78,9 +78,10 @@ public class FetchImg extends AppCompatActivity {
                 mEdit = (EditText) findViewById(R.id.newURL);
                 url = mEdit.getText().toString();
                 if(!Patterns.WEB_URL.matcher(url).matches()){
-//                    Toast.makeText(getApplicationContext(), "Enter valid url", Toast.LENGTH_LONG).show();
                     mEdit.setError("Please enter a valid url");
                     return;
+                } else if(!url.startsWith("http://") && !url.startsWith("www.")){
+                    url = "http://" + url;
                 }
                 hideKeyboard(v);
 

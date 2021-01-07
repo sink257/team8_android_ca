@@ -85,19 +85,12 @@ public class FetchImg extends AppCompatActivity {
                 }
                 hideKeyboard(v);
 
-                if (URLUtil.isValidUrl(url) == true) {
-                    revertToDefault();
-
-                    if (content != null) {
-                        content.cancel(true);
-                    }
-
-                    content = new Content();
-                    content.execute();
+                if (content != null) {
+                    content.cancel(true);
                 }
-                else {
 
-                }
+                content = new Content();
+                content.execute();
             }
         });
     }

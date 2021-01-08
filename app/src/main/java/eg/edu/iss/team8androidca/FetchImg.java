@@ -205,7 +205,6 @@ public class FetchImg extends AppCompatActivity {
                                     v.setAlpha((float) 0.5);
                                     clickCount++;
                                     imgSelected.add(img);
-
                                 }
                             }
                             textView.setText(clickCount + " / 6 images selected");

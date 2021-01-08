@@ -295,7 +295,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                     SharedPreferences.Editor editor = deletePref.edit();
                     editor.remove("bitArray").apply();
 
-                    Intent intent = new Intent(getApplicationContext(), FetchImg.class);
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);
                     finish();
                 });
@@ -323,7 +323,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                     SharedPreferences.Editor editor = deletePref.edit();
                     editor.remove("bitArray").apply();
 
-                    Intent intent = new Intent(getApplicationContext(), FetchImg.class);
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);
                     finish();
                 });

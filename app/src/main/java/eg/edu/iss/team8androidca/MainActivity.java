@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public class MainActivity extends AppCompatActivity {
 
     Button fetchBtn;
-    private Double fastestTime;
+    private Double fastestTime = 45.0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,9 +23,15 @@ public class MainActivity extends AppCompatActivity {
 
         TextView textview = findViewById(R.id.highScore);
         final SharedPreferences pref = getSharedPreferences("fastest_time", MODE_PRIVATE);
-        fastestTime = Double.parseDouble(pref.getString("fastestTime", String.valueOf(fastestTime)));
-        String _fastestTime = getFastestTimeText();
-        textview.setText("Fastest Time: " + _fastestTime);
+        if (pref == null) {
+            String _fastestTime = getFastestTimeText();
+            textview.setText("Time To Beat: " + _fastestTime);
+        } else {
+            fastestTime = Double.parseDouble(pref.getString("fastestTime", String.valueOf(fastestTime)));
+            String _fastestTime = getFastestTimeText();
+            textview.setText("Time To Beat: " + _fastestTime);
+        }
+
 
     }
 

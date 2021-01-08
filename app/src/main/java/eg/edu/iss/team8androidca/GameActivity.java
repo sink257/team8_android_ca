@@ -3,11 +3,8 @@ package eg.edu.iss.team8androidca;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,7 +17,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -34,11 +30,10 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     ArrayList<Bitmap> buttonGraphics = new ArrayList<Bitmap>();
     private int matchCount = 0;
     private TextView timerText;
-    private TextView fastestTimeText;
     private Timer timer;
     private TimerTask timerTask;
     private Double time = 0.0;
-    private Double fastestTime = 20.0;
+    private Double fastestTime = 45.0;
     private Boolean isPause = false;
     private MemoryButton selectedButton1;
     private MemoryButton selectedButton2;
@@ -51,8 +46,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
         Intent intent = getIntent();
 
-        for (int i = 1; i<7; i++){
-            byte[] bitmapdata  = intent.getByteArrayExtra("selectedImg"+i);
+        for (int i = 1; i < 7; i++) {
+            byte[] bitmapdata = intent.getByteArrayExtra("selectedImg" + i);
             Bitmap bitmap = BitmapFactory.decodeByteArray(bitmapdata, 0, bitmapdata.length);
             buttonGraphics.add(bitmap);
         }
@@ -85,7 +80,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
         buttons = new MemoryButton[numberOfElements];
 
-
         buttonGraphicLocations = new int[numberOfElements];
 
         shuffleButtonGraphics();
@@ -100,9 +94,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
 
-            TextView instructions = findViewById(R.id.instruction);
-            instructions.setText("Click on one of the lightbulbs to start matching!");
-
+        TextView instructions = findViewById(R.id.instruction);
+        instructions.setText("Click on one of the lightbulbs to start matching!");
 
     }
 
@@ -284,7 +277,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                     finish();
                 })
                 .setNegativeButton("New Game", (dialog, which) -> {
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), FetchImg.class);
                     startActivity(intent);
                     finish();
                 });
@@ -308,7 +301,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                     finish();
                 })
                 .setNegativeButton("New Game", (dialog, which) -> {
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), FetchImg.class);
                     startActivity(intent);
                     finish();
                 });

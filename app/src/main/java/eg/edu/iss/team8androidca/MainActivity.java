@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
         final SharedPreferences pref = getSharedPreferences("fastest_time", MODE_PRIVATE);
         fastestTime = Double.parseDouble(pref.getString("fastestTime", String.valueOf(fastestTime)));
         String _fastestTime = getFastestTimeText();
-        textview.setText("Fastest Time: " + _fastestTime);
+        textview.setText("\uD83E\uDD47 " + _fastestTime);
 
     }
 

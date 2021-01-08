@@ -30,7 +30,7 @@ public class MemoryButton extends androidx.appcompat.widget.AppCompatButton {
         BitmapDrawable bdrawable = new BitmapDrawable(context.getResources(),scaled);
 
         front = bdrawable;
-        back = context.getDrawable(R.drawable.bigquestion);
+        back = context.getDrawable(R.drawable.question);
 
         setBackground(back);
 

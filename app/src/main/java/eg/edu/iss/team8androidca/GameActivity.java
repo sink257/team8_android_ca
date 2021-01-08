@@ -148,10 +148,12 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             selectedButton1 = null;
 
             matchCount++;
-            final MediaPlayer correctSound = MediaPlayer.create(this, R.raw.correct);
-            correctSound.start();
-            Toast msg = Toast.makeText(this, "Good job! Correct match!", Toast.LENGTH_SHORT);
-            msg.show();
+            if (matchCount < 6) {
+                final MediaPlayer correctSound = MediaPlayer.create(this, R.raw.correct);
+                correctSound.start();
+                Toast msg = Toast.makeText(this, "Good job! Correct match!", Toast.LENGTH_SHORT);
+                msg.show();
+            }
 
             TextView textview = findViewById(R.id.score);
             String score = "Matched sets: " + String.valueOf(matchCount) + " / " + String.valueOf(numberOfElements / 2);

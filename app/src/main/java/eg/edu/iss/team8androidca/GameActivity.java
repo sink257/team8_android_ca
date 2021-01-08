@@ -70,7 +70,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
             SharedPreferences.Editor editor = prefArray.edit();
             editor.putStringSet("bitArray", bitarrayset);
-            editor.commit();
+            editor.apply();
         }
 
         int numColumns = 3;
@@ -289,6 +289,10 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                     finish();
                 })
                 .setNegativeButton("New Game", (dialog, which) -> {
+                    SharedPreferences deletePref = getPreferences(Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = deletePref.edit();
+                    editor.remove("bitArray").apply();
+
                     Intent intent = new Intent(getApplicationContext(), FetchImg.class);
                     startActivity(intent);
                     finish();
@@ -313,6 +317,10 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                     finish();
                 })
                 .setNegativeButton("New Game", (dialog, which) -> {
+                    SharedPreferences deletePref = getPreferences(Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = deletePref.edit();
+                    editor.remove("bitArray").apply();
+
                     Intent intent = new Intent(getApplicationContext(), FetchImg.class);
                     startActivity(intent);
                     finish();

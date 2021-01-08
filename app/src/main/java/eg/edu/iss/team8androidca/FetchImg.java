@@ -77,9 +77,6 @@ public class FetchImg extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View v) {
-                SharedPreferences deletePref = getPreferences(Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = deletePref.edit();
-                editor.remove("bitArray").apply();
                 mEdit = (EditText) findViewById(R.id.newURL);
                 url = mEdit.getText().toString();
                 if (!Patterns.WEB_URL.matcher(url).matches()) {

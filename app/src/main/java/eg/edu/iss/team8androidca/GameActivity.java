@@ -282,7 +282,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(GameActivity.this);
         alertDialogBuilder
-                .setTitle("Game Over!")
+                .setTitle("Game Over! " + ("\uD83D\uDCA9"))
                 .setMessage("Try harder to beat the fastest time!\n\n" + "Your Time: " + _time + "\n" + "Fastest Time: " + _fastestTime + "\n")
                 .setCancelable(false)
                 .setPositiveButton("Try Again", (dialog, which) -> {
@@ -310,7 +310,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(GameActivity.this);
         alertDialogBuilder
-                .setTitle("You Win!")
+                .setTitle("You Win! " + ("\uD83C\uDF89"))
                 .setMessage("You set a new fastest time!\n\n" + "Your Time: " + _time + "\n" + "Fastest Time: " + _fastestTime + "\n")
                 .setCancelable(false)
                 .setPositiveButton("Try Again", (dialog, which) -> {

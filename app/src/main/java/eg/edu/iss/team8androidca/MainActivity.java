@@ -23,13 +23,14 @@ public class MainActivity extends AppCompatActivity {
 
         TextView textview = findViewById(R.id.highScore);
         final SharedPreferences pref = getSharedPreferences("fastest_time", MODE_PRIVATE);
+
         if (pref == null) {
             String _fastestTime = getFastestTimeText();
-            textview.setText("Time To Beat: " + _fastestTime);
+            textview.setText("\uD83E\uDD47 " + _fastestTime);
         } else {
             fastestTime = Double.parseDouble(pref.getString("fastestTime", String.valueOf(fastestTime)));
             String _fastestTime = getFastestTimeText();
-            textview.setText("Time To Beat: " + _fastestTime);
+            textview.setText("\uD83E\uDD47 " + _fastestTime);
         }
 
 

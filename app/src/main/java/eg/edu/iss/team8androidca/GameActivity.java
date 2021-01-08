@@ -108,7 +108,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         TextView instructions = findViewById(R.id.instruction);
-        instructions.setText("Click on one of the lightbulbs to start matching!");
+        instructions.setText("Click on one of the cards to start matching!");
     }
 
     @Override

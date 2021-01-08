@@ -12,8 +12,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Team8AndroidCA"
         android:usesCleartextTraffic="true">
-        <activity android:name=".FetchImg" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".FetchImg"
+            android:screenOrientation = "portrait"/>
+        <activity android:name=".MainActivity"
+            android:screenOrientation = "portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

@@ -1,5 +1,6 @@
 package eg.edu.iss.team8androidca;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -8,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Base64;
 import android.view.View;
 import android.widget.GridLayout;
 import android.widget.TextView;
@@ -16,7 +18,9 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -37,6 +41,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private Boolean isPause = false;
     private MemoryButton selectedButton1;
     private MemoryButton selectedButton2;
+    private final HashSet<String> bitarrayset = new HashSet<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,28 +51,36 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
         Intent intent = getIntent();
 
-        for (int i = 1; i < 7; i++) {
-            byte[] bitmapdata = intent.getByteArrayExtra("selectedImg" + i);
-            Bitmap bitmap = BitmapFactory.decodeByteArray(bitmapdata, 0, bitmapdata.length);
-            buttonGraphics.add(bitmap);
+        SharedPreferences prefArray = getPreferences(Context.MODE_PRIVATE);
+        HashSet<String> retrievedArray = (HashSet<String>) prefArray.getStringSet("bitArray", null);
+        if (retrievedArray != null) {
+            for (String temp : retrievedArray) {
+                byte[] retrievedString = Base64.decode(temp.getBytes(), Base64.DEFAULT);
+                Bitmap bitmap = BitmapFactory.decodeByteArray(retrievedString, 0, retrievedString.length);
+                buttonGraphics.add(bitmap);
+            }
+        } else {
+            for (int i = 1; i < 7; i++) {
+                byte[] bitmapdata = intent.getByteArrayExtra("selectedImg" + i);
+                Bitmap bitmap = BitmapFactory.decodeByteArray(bitmapdata, 0, bitmapdata.length);
+                String encoded = Base64.encodeToString(bitmapdata, Base64.DEFAULT);
+                bitarrayset.add(encoded);
+                buttonGraphics.add(bitmap);
+            }
+
+            SharedPreferences.Editor editor = prefArray.edit();
+            editor.putStringSet("bitArray", bitarrayset);
+            editor.apply();
         }
 
-        int numColumns = 0;
-        int numRows = 0;
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            numColumns = 3;
-            numRows = 4;
-
-        } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            numColumns = 6;
-            numRows = 2;
-        }
+        int numColumns = 3;
+        int numRows = 4;
 
         numberOfElements = numColumns * numRows;
         gridLayout.setColumnCount(numColumns);
         gridLayout.setRowCount(numRows);
 
-        timerText = (TextView) findViewById(R.id.timer);
+        timerText = findViewById(R.id.timer);
 
         TextView textview = findViewById(R.id.score);
         String score = "Matched sets: " + String.valueOf(matchCount) + " / " + String.valueOf(numberOfElements / 2);
@@ -96,7 +109,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
         TextView instructions = findViewById(R.id.instruction);
         instructions.setText("Click on one of the lightbulbs to start matching!");
-
     }
 
     @Override
@@ -136,10 +148,12 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             selectedButton1 = null;
 
             matchCount++;
-            final MediaPlayer correctSound = MediaPlayer.create(this, R.raw.correct);
-            correctSound.start();
-            Toast msg = Toast.makeText(this, "Good job! Correct match!", Toast.LENGTH_SHORT);
-            msg.show();
+            if (matchCount < 6) {
+                final MediaPlayer correctSound = MediaPlayer.create(this, R.raw.correct);
+                correctSound.start();
+                Toast msg = Toast.makeText(this, "Good job! Correct match!", Toast.LENGTH_SHORT);
+                msg.show();
+            }
 
             TextView textview = findViewById(R.id.score);
             String score = "Matched sets: " + String.valueOf(matchCount) + " / " + String.valueOf(numberOfElements / 2);
@@ -277,6 +291,10 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                     finish();
                 })
                 .setNegativeButton("New Game", (dialog, which) -> {
+                    SharedPreferences deletePref = getPreferences(Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = deletePref.edit();
+                    editor.remove("bitArray").apply();
+
                     Intent intent = new Intent(getApplicationContext(), FetchImg.class);
                     startActivity(intent);
                     finish();
@@ -301,6 +319,10 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                     finish();
                 })
                 .setNegativeButton("New Game", (dialog, which) -> {
+                    SharedPreferences deletePref = getPreferences(Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = deletePref.edit();
+                    editor.remove("bitArray").apply();
+
                     Intent intent = new Intent(getApplicationContext(), FetchImg.class);
                     startActivity(intent);
                     finish();

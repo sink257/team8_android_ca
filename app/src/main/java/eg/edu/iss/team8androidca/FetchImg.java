@@ -1,6 +1,8 @@
 package eg.edu.iss.team8androidca;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -203,7 +205,6 @@ public class FetchImg extends AppCompatActivity {
                                     v.setAlpha((float) 0.5);
                                     clickCount++;
                                     imgSelected.add(img);
-
                                 }
                             }
                             textView.setText(clickCount + " / 6 images selected");

@@ -41,7 +41,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private Boolean isPause = false;
     private MemoryButton selectedButton1;
     private MemoryButton selectedButton2;
-    private HashSet<String> bitarrayset = new HashSet<>();
+    private final HashSet<String> bitarrayset = new HashSet<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,10 +148,12 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             selectedButton1 = null;
 
             matchCount++;
-            final MediaPlayer correctSound = MediaPlayer.create(this, R.raw.correct);
-            correctSound.start();
-            Toast msg = Toast.makeText(this, "Good job! Correct match!", Toast.LENGTH_SHORT);
-            msg.show();
+            if (matchCount < 6) {
+                final MediaPlayer correctSound = MediaPlayer.create(this, R.raw.correct);
+                correctSound.start();
+                Toast msg = Toast.makeText(this, "Good job! Correct match!", Toast.LENGTH_SHORT);
+                msg.show();
+            }
 
             TextView textview = findViewById(R.id.score);
             String score = "Matched sets: " + String.valueOf(matchCount) + " / " + String.valueOf(numberOfElements / 2);
@@ -293,7 +295,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                     SharedPreferences.Editor editor = deletePref.edit();
                     editor.remove("bitArray").apply();
 
-                    Intent intent = new Intent(getApplicationContext(), FetchImg.class);
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);
                     finish();
                 });
@@ -321,7 +323,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                     SharedPreferences.Editor editor = deletePref.edit();
                     editor.remove("bitArray").apply();
 
-                    Intent intent = new Intent(getApplicationContext(), FetchImg.class);
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);
                     finish();
                 });

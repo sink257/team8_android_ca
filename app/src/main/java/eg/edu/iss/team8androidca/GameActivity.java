@@ -41,7 +41,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private Boolean isPause = false;
     private MemoryButton selectedButton1;
     private MemoryButton selectedButton2;
-    private HashSet<String> bitarrayset = new HashSet<>();
+    private final HashSet<String> bitarrayset = new HashSet<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

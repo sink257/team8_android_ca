@@ -1,6 +1,5 @@
 package eg.edu.iss.team8androidca;
 
-
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -36,7 +35,6 @@ import java.util.ArrayList;
 import java.util.ListIterator;
 
 public class FetchImg extends AppCompatActivity {
-
     String url;
     LinearLayout gallery;
     ImageView[] imageViews = new ImageView[20];
@@ -58,7 +56,7 @@ public class FetchImg extends AppCompatActivity {
         setContentView(R.layout.activity_fetch_img);
         gallery = findViewById(R.id.gallery);
         msg = Toast.makeText(this, "Download Completed!", Toast.LENGTH_SHORT);
-        opps = Toast.makeText(this, "Opps!, Choose another url with 6 or more images", Toast.LENGTH_LONG);
+        opps = Toast.makeText(this, "Opps! Choose another url with 6 or more images", Toast.LENGTH_LONG);
         textView = findViewById(R.id.progress_text);
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);
         progressBar.setMax(20);

@@ -36,14 +36,9 @@ public class MemoryButton extends androidx.appcompat.widget.AppCompatButton {
 
         GridLayout.LayoutParams tempParams = new GridLayout.LayoutParams(GridLayout.spec(r), GridLayout.spec(c));
 
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             tempParams.width = Resources.getSystem().getDisplayMetrics().widthPixels / 3;
             tempParams.height = Resources.getSystem().getDisplayMetrics().heightPixels / 6;
-        }
-        else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            tempParams.width = Resources.getSystem().getDisplayMetrics().widthPixels / 6;
-            tempParams.height = Resources.getSystem().getDisplayMetrics().heightPixels / 3;
-        }
+
         tempParams.setMargins(3,3,3,3);
         setLayoutParams(tempParams);
     }

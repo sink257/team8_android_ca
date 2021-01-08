@@ -1,6 +1,8 @@
 package eg.edu.iss.team8androidca;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -75,6 +77,9 @@ public class FetchImg extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View v) {
+                SharedPreferences deletePref = getPreferences(Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = deletePref.edit();
+                editor.remove("bitArray").apply();
                 mEdit = (EditText) findViewById(R.id.newURL);
                 url = mEdit.getText().toString();
                 if (!Patterns.WEB_URL.matcher(url).matches()) {

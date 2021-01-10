@@ -15,6 +15,11 @@ import android.widget.GridLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+
+import android.view.animation.AnimationSet;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -26,7 +31,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class GameActivity extends AppCompatActivity implements View.OnClickListener {
-
+    Animation animation;
+    Animation animation1;
     public boolean isBusy = false;
     private int numberOfElements;
     private MemoryButton[] buttons;
@@ -47,6 +53,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.flipback);
+        animation1 = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.flipback);
         setContentView(R.layout.activity_game);
         GridLayout gridLayout = (GridLayout) findViewById(R.id.grid_layout_activity2);
 
@@ -136,15 +144,55 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             return;
         }
 
+
+        AnimationSet animationSet = new AnimationSet(true);
+        animationSet.addAnimation(animation);
+        animationSet.addAnimation(animation1);
+
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) { }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.flipfont);
+                button.flip();
+                button.startAnimation(animation);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) { }
+        });
+
+        animation1.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation1) { }
+
+            @Override
+            public void onAnimationEnd(Animation animation1) {
+                animation1 = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.flipfont);
+
+                selectedButton1.flip();
+                selectedButton1.startAnimation(animation1);
+                selectedButton1=null;
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation1) { }
+        });
+
+        button.startAnimation(animation);
+
 //        if user presses ID twice
         if (selectedButton1.getId() == button.getId()) {
             return;
         }
 
         if (selectedButton1.getFrontImage() == button.getFrontImage()) {
+            button.startAnimation(animation);
+            button.setMatched(true);
             button.flip();
 
-            button.setMatched(true);
             selectedButton1.setMatched(true);
 
             selectedButton1.setEnabled(false);

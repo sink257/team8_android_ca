@@ -243,10 +243,9 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    selectedButton2.flip();
-                    selectedButton1.flip();
 
-                    selectedButton1 = null;
+                    selectedButton1.startAnimation(animation1);
+                    button.startAnimation(animation);
                     selectedButton2 = null;
                     isBusy = false;
                 }

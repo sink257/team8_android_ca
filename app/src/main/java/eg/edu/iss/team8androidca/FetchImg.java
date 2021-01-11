@@ -47,7 +47,6 @@ public class FetchImg extends AppCompatActivity {
     TextView textView;
     Toast msg, opps;
     Content content = null;
-
     int clickCount = 0;
 
     @Override
@@ -55,16 +54,17 @@ public class FetchImg extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fetch_img);
         gallery = findViewById(R.id.gallery);
+        textView = findViewById(R.id.progress_text);
+        mfetch = (Button) findViewById(R.id.fetch);
+        mStart = (Button) findViewById(R.id.start);
         msg = Toast.makeText(this, "Download Completed!", Toast.LENGTH_SHORT);
         opps = Toast.makeText(this, "Opps! Choose another url with 6 or more images", Toast.LENGTH_LONG);
-        textView = findViewById(R.id.progress_text);
+
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);
         progressBar.setMax(20);
 
         loadDefaultImageViews();
 
-        mfetch = (Button) findViewById(R.id.fetch);
-        mStart = (Button) findViewById(R.id.start);
         mfetch.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override

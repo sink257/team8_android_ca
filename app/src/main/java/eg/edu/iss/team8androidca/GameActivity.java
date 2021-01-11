@@ -278,7 +278,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         editor.remove("bitArray").apply();
         Intent intent = new Intent(this, FetchImg.class);
         startActivity(intent);
-        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 
 

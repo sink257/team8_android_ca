@@ -84,11 +84,13 @@ public class FetchImg extends AppCompatActivity {
                     return;
                 }
                 else if (!url.startsWith("http://")) {
-                    url = "http://" + url;
+                    if (!url.startsWith("https://")) {
+                        url = "http://" + url;
+                    }
                 }
-                else if (url.startsWith("www.")) {
-                    url = "http://" + url;
-                }
+
+
+
                     hideKeyboard(v);
                     revertToDefault();
 

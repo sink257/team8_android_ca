@@ -1,8 +1,6 @@
 package eg.edu.iss.team8androidca;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,7 +11,6 @@ import android.util.Patterns;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.webkit.URLUtil;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -38,7 +35,6 @@ import java.util.ArrayList;
 import java.util.ListIterator;
 
 public class FetchImg extends AppCompatActivity {
-
     String url;
     LinearLayout gallery;
     ImageView[] imageViews = new ImageView[20];
@@ -47,15 +43,10 @@ public class FetchImg extends AppCompatActivity {
     Button mfetch;
     EditText mEdit;
     Button mStart;
-    int progress = 0;
     ProgressBar progressBar;
     TextView textView;
     Toast msg, opps;
     Content content = null;
-    int imgWidth;
-    int imgHeight;
-
-
     int clickCount = 0;
 
     @Override
@@ -63,16 +54,17 @@ public class FetchImg extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fetch_img);
         gallery = findViewById(R.id.gallery);
-        msg = Toast.makeText(this, "Download Completed!", Toast.LENGTH_SHORT);
-        opps = Toast.makeText(this, "Opps!, Choose another url with 6 or more images", Toast.LENGTH_LONG);
         textView = findViewById(R.id.progress_text);
+        mfetch = (Button) findViewById(R.id.fetch);
+        mStart = (Button) findViewById(R.id.start);
+        msg = Toast.makeText(this, "Download Completed!", Toast.LENGTH_SHORT);
+        opps = Toast.makeText(this, "Opps! Choose another url with 6 or more images", Toast.LENGTH_LONG);
+
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);
         progressBar.setMax(20);
 
         loadDefaultImageViews();
 
-        mfetch = (Button) findViewById(R.id.fetch);
-        mStart = (Button) findViewById(R.id.start);
         mfetch.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
@@ -120,7 +112,7 @@ public class FetchImg extends AppCompatActivity {
                 ListIterator<Element> elementIt = imgs.listIterator();
 
                 for (int i = 0; i < 20; i++) {
-//                    if (isCancelled()){break;}
+
                     if (elementIt.hasNext()) {
                         String imgSrc = elementIt.next().absUrl("src");
                         InputStream input = new java.net.URL(imgSrc).openStream();
@@ -130,9 +122,9 @@ public class FetchImg extends AppCompatActivity {
                         float imgBitRatio = (float) imgbit.getHeight() / imgbit.getWidth();
                         float imgViewRatio = (float) imageViews[1].getMeasuredHeight() / imageViews[1].getMeasuredWidth();
                         if (imgViewRatio > imgBitRatio) {
-                            int imgbitWeight = (int) (imgbit.getHeight() / imgViewRatio);
+                            int imgbitWidth = (int) (imgbit.getHeight() / imgViewRatio);
                             int startPosX = (int) (imgbit.getWidth() - (imgbit.getHeight() / imgViewRatio)) / 2;
-                            imgbit = Bitmap.createBitmap(imgbit, startPosX, 0, imgbitWeight, imgbit.getHeight());
+                            imgbit = Bitmap.createBitmap(imgbit, startPosX, 0, imgbitWidth, imgbit.getHeight());
                         } else {
                             int imgbitHeight = (int) (imgbit.getWidth() * imgViewRatio);
                             int startPosY = (int) (imgbit.getHeight() - (imgbit.getWidth() * imgViewRatio)) / 2;
@@ -170,12 +162,10 @@ public class FetchImg extends AppCompatActivity {
             if (imgBits.size() < 6){
                 textView.setVisibility(View.INVISIBLE);
                 opps.show();
-
             }
 
             else {
                 msg.show();
-
                 textView.setText("Please select 6 images");
 
                 for (int i = 0; i < imgBits.size(); i++) {
@@ -293,7 +283,6 @@ public class FetchImg extends AppCompatActivity {
         for (View v : imageViews) {
             v.setAlpha(1);
         }
-
     }
 }
 

@@ -230,7 +230,6 @@ public class FetchImg extends AppCompatActivity {
                     }
                     startActivity(intent);
                 });
-
             }
         }
     }

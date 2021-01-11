@@ -27,7 +27,7 @@ import java.util.TimerTask;
 
 public class GameActivity extends AppCompatActivity implements View.OnClickListener {
 
-    public boolean isBusy = false;
+    boolean isBusy = false;
     private int numberOfElements;
     private MemoryButton[] buttons;
     private int[] buttonGraphicLocations;
@@ -270,6 +270,17 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         super.onResume();
         isPause = false;
     }
+
+    @Override
+    public void onBackPressed(){
+        SharedPreferences deletePref = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = deletePref.edit();
+        editor.remove("bitArray").apply();
+        Intent intent = new Intent(this, FetchImg.class);
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+    }
+
 
     private String getFastestTimeText() {
         int rounded = (int) Math.round(fastestTime);

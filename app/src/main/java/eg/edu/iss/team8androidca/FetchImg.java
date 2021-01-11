@@ -74,22 +74,21 @@ public class FetchImg extends AppCompatActivity {
                 if (!Patterns.WEB_URL.matcher(url).matches()) {
                     mEdit.setError("Please enter a valid url");
                     return;
-                }
-                else if (!url.startsWith("http://")) {
+                } else if (!url.startsWith("http://")) {
                     if (!url.startsWith("https://")) {
                         url = "http://" + url;
                     }
                 }
 
-                    hideKeyboard(v);
-                    revertToDefault();
+                hideKeyboard(v);
+                revertToDefault();
 
-                    if (content != null) {
-                        content.cancel(true);
-                    }
-                    content = new Content();
-                    content.execute();
+                if (content != null) {
+                    content.cancel(true);
                 }
+                content = new Content();
+                content.execute();
+            }
         });
     }
 
@@ -159,12 +158,10 @@ public class FetchImg extends AppCompatActivity {
             super.onPostExecute(aVoid);
             progressBar.setVisibility(ProgressBar.INVISIBLE);
 
-            if (imgBits.size() < 6){
+            if (imgBits.size() < 6) {
                 textView.setVisibility(View.INVISIBLE);
                 opps.show();
-            }
-
-            else {
+            } else {
                 msg.show();
                 textView.setText("Please select 6 images");
 

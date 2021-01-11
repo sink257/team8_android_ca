@@ -1,7 +1,6 @@
 package eg.edu.iss.team8androidca;
 
 import android.content.Context;
-import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -26,8 +25,8 @@ public class MemoryButton extends androidx.appcompat.widget.AppCompatButton {
         column = c;
         this.frontImage = frontImage;
 
-        Bitmap scaled = Bitmap.createScaledBitmap(frontImage, (int)(frontImage.getWidth()*0.5), (int)(frontImage.getHeight()*0.5), true);
-        BitmapDrawable bdrawable = new BitmapDrawable(context.getResources(),scaled);
+        Bitmap scaled = Bitmap.createScaledBitmap(frontImage, (int) (frontImage.getWidth() * 0.5), (int) (frontImage.getHeight() * 0.5), true);
+        BitmapDrawable bdrawable = new BitmapDrawable(context.getResources(), scaled);
 
         front = bdrawable;
         back = context.getDrawable(R.drawable.question);
@@ -36,10 +35,10 @@ public class MemoryButton extends androidx.appcompat.widget.AppCompatButton {
 
         GridLayout.LayoutParams tempParams = new GridLayout.LayoutParams(GridLayout.spec(r), GridLayout.spec(c));
 
-            tempParams.width = ((Resources.getSystem().getDisplayMetrics().widthPixels)-(120)) / 3;
-            tempParams.height = ((Resources.getSystem().getDisplayMetrics().heightPixels)) / 7;
+        tempParams.width = ((Resources.getSystem().getDisplayMetrics().widthPixels) - (120)) / 3;
+        tempParams.height = ((Resources.getSystem().getDisplayMetrics().heightPixels)) / 7;
 
-        tempParams.setMargins(8,8,8,8);
+        tempParams.setMargins(8, 8, 8, 8);
         setLayoutParams(tempParams);
     }
 

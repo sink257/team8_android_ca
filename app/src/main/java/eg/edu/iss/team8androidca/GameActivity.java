@@ -3,7 +3,6 @@ package eg.edu.iss.team8androidca;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
@@ -18,7 +17,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Random;
@@ -114,7 +112,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
-        if (clickCount<1){
+        if (clickCount < 1) {
             startTime();
         }
         clickCount++;
@@ -272,7 +270,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
         SharedPreferences deletePref = getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = deletePref.edit();
         editor.remove("bitArray").apply();

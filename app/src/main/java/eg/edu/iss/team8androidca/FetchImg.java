@@ -76,22 +76,20 @@ public class FetchImg extends AppCompatActivity {
                     return;
                 }
                 else if (!url.startsWith("http://")) {
-                    url = "http://" + url;
+                    if (!url.startsWith("https://")) {
+                        url = "http://" + url;
+                    }
                 }
-                else if (url.startsWith("www.")) {
-                    url = "http://" + url;
-                }
+
                     hideKeyboard(v);
                     revertToDefault();
 
                     if (content != null) {
                         content.cancel(true);
                     }
-
                     content = new Content();
                     content.execute();
                 }
-
         });
     }
 
@@ -220,7 +218,6 @@ public class FetchImg extends AppCompatActivity {
                     }
                     startActivity(intent);
                 });
-
             }
         }
     }

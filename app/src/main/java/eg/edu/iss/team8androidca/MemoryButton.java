@@ -56,7 +56,7 @@ public class MemoryButton extends androidx.appcompat.widget.AppCompatButton {
     }
 
     public void flip() {
-        if (isMatched) {
+        if (isMatched()) {
             return;
         }
         if (isFlipped) {

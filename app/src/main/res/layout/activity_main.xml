@@ -25,10 +25,10 @@
         android:fontFamily="sans-serif-medium"
         android:text="Fastest Time to Beat"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_const_raintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/logo" />
+        app:layout_constraintToptoBottomOf="@+id/logo" />
 
     <TextView
         android:id="@+id/highScore"
